@@ -1,0 +1,4 @@
+* Add loading and fix push data 
+* add animation loading 
+* Add icon and splash ios 
+* Add helper and cleanup 
