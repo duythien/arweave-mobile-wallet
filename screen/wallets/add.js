@@ -32,7 +32,7 @@ import { Chain } from '../../models/bitcoinUnits';
 import loc from '../../loc';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
 import { ArweaveWallet } from '../../class/wallets/arweave-wallet';
-import Arweave from 'arweave';
+import { getKey } from '../../helpers/request';
 
 const A = require('../../blue_modules/analytics');
 
@@ -107,36 +107,33 @@ const WalletsAdd = () => {
     setEntropyButtonText(entropyTitle);
   };
 
-  //const arweave = Arweave.init({});
 
-  //console.log('>>>>>>>' + arweave)
 
   const createWallet = async () => {
 
-    // arweave.wallets.generate().then((key) => {
-    //   console.log(key);
-    //     const w = {
-    //     'label': label,
-    //     'chain': 'arweave',
-    //     'address' : address,
-    //     'secret': phrase,
-    //     'preferredBalanceUnit': 'PQD',
-    //     'unconfirmed_balance': 0,
-    //     'balance_human': 0,
-    //     'type': 'arweave',
-    //     'use_with_hardware_wallet': false,
-    //     'key': key
-    //   }
+    const key = await getKey();
+    console.log(key);
+    
+    const w = {
+        'label': label,
+        'chain': 'arweave',
+        'preferredBalanceUnit': 'PQD',
+        'unconfirmed_balance': 0,
+        'balance_human': 0,
+        'type': 'arweave',
+        'use_with_hardware_wallet': false,
+        'key': key
+      }
 
 
 
-    //   arweave = new ArweaveWallet(w);
-    //   //addWallet(arweave);
+      arweave = new ArweaveWallet(w);
+      addWallet(arweave);
 
-    //   //await saveToDisk();
-    //   navigate('PleaseBackup', {
-    //       walletID: address,
-    //   });
+      await saveToDisk();
+      navigate('PleaseBackupQrcode', {
+          walletID: key.n,
+      });
     // });
     
 

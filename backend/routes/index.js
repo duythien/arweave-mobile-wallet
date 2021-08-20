@@ -9,10 +9,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/arweave/key', function(req, res, next) {
-  arweave.wallets.generate().then((key) => {
-    res.send(key);
+    arweave.wallets.generate().then((key) => {
+      res.send(key);
 
-  });
+    });
 });
 router.get('/arweave/address', function(req, res, next) {
   let key = req.body;

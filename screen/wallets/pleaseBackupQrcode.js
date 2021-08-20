@@ -9,7 +9,7 @@ import Privacy from '../../blue_modules/Privacy';
 import loc from '../../loc';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
 
-const PleaseBackupLNDHub = () => {
+const PleaseBackupQrcode = () => {
   const { wallets } = useContext(BlueStorageContext);
   const { walletID } = useRoute().params;
   const wallet = wallets.find(w => w.getID() === walletID);
@@ -79,7 +79,7 @@ const PleaseBackupLNDHub = () => {
   );
 };
 
-PleaseBackupLNDHub.navigationOptions = navigationStyle(
+PleaseBackupQrcode.navigationOptions = navigationStyle(
   {
     closeButton: true,
     headerLeft: null,
@@ -90,4 +90,4 @@ PleaseBackupLNDHub.navigationOptions = navigationStyle(
   opts => ({ ...opts, title: loc.pleasebackup.title }),
 );
 
-export default PleaseBackupLNDHub;
+export default PleaseBackupQrcode;

@@ -29,7 +29,7 @@ import WalletsAddMultisig from './screen/wallets/addMultisig';
 import WalletsAddMultisigStep2 from './screen/wallets/addMultisigStep2';
 import WalletsAddMultisigHelp from './screen/wallets/addMultisigHelp';
 import PleaseBackup from './screen/wallets/pleaseBackup';
-import PleaseBackupLNDHub from './screen/wallets/pleaseBackupLNDHub';
+import PleaseBackupQrcode from './screen/wallets/pleaseBackupQrcode';
 import ImportWallet from './screen/wallets/import';
 import WalletDetails from './screen/wallets/details';
 import WalletExport from './screen/wallets/export';
@@ -193,9 +193,9 @@ const AddWalletRoot = () => {
       <AddWalletStack.Screen name="ImportWallet" component={ImportWallet} options={ImportWallet.navigationOptions(theme)} />
       <AddWalletStack.Screen name="PleaseBackup" component={PleaseBackup} options={PleaseBackup.navigationOptions(theme)} />
       <AddWalletStack.Screen
-        name="PleaseBackupLNDHub"
-        component={PleaseBackupLNDHub}
-        options={PleaseBackupLNDHub.navigationOptions(theme)}
+        name="PleaseBackupQrcode"
+        component={PleaseBackupQrcode}
+        options={PleaseBackupQrcode.navigationOptions(theme)}
       />
       <AddWalletStack.Screen name="ProvideEntropy" component={ProvideEntropy} options={ProvideEntropy.navigationOptions(theme)} />
       <AddWalletStack.Screen

@@ -43,7 +43,7 @@ export class ArweaveWallet {
     return '0xf6c55dcd3414664b9b3f61aeedbc304ea391cbc40ff2590ea094896c4587f67c';
   }
   getSecret() {
-    return this.props.secret
+    return '123'
   }
   
   getIsFailure() {
@@ -51,7 +51,7 @@ export class ArweaveWallet {
   }
   getLabel() {
     // no longer used in wallets carousel
-    return this.props.label? this.props.label : 'Your PQD';
+    return this.props.label? this.props.label : 'Your Arweave';
   }
   getHideTransactionsInWalletsList() {
     return '123';
@@ -60,7 +60,7 @@ export class ArweaveWallet {
     return 'getPreferredBalanceUnit';
   }
   getID() {
-    return this.props.address;
+    return this.props.key.n;
   }
   getLatestTransactionTime() {
     return 'getLatestTransactionTime'

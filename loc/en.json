@@ -94,7 +94,7 @@
     "offer_promt_fiat": "How much {currency} do you want to buy?",
     "offer_promt_fiat_e": "For example, 100",
     "offer_window": "Window",
-    "p2p": "Buy Phu Quoc Dog on a Peer-to-Peer Exchange"
+    "p2p": "Buy Arweave on a Peer-to-Peer Exchange"
   },
   "lnd": {
     "errorInvoiceExpired": "Invoice expired",
@@ -379,8 +379,8 @@
     "updating": "Updating..."
   },
   "wallets": {
-    "add_pqd": "Phu Quoc Dog",
-    "add_pqd_explain": "Simple and powerful Phu Quoc Dog wallet",
+    "add_pqd": "Arweave",
+    "add_pqd_explain": "Simple and powerful Arweave wallet",
     "add_bitcoin": "Bitcoin",
     "add_bitcoin_explain": "Simple and powerful Bitcoin wallet",
     "add_create": "Create",
@@ -390,7 +390,7 @@
     "add_import_wallet": "Import wallet",
     "add_lightning": "Lightning",
     "add_lightning_explain": "For spending with instant transactions",
-    "add_lndhub": "Connect to your Phu Quoc Node",
+    "add_lndhub": "Connect to your Arweave Node",
     "add_lndhub_error": "The provided node address is not a valid LNDHub node.",
     "add_lndhub_placeholder": "Your Node Address",
     "add_or": "or",
