@@ -24,7 +24,7 @@ import {
 import { randomBytes } from './rng';
 const encryption = require('../blue_modules/encryption');
 
-import {PhuquocdogWallet} from './wallets/phuquocdog-wallet';
+import {ArweaveWallet} from './wallets/arweave-wallet';
 const Realm = require('realm');
 const createHash = require('create-hash');
 let usedBucketNum = false;
@@ -323,7 +323,7 @@ export class AppStorage {
       data = JSON.parse(data);
       if (!data.wallets) return false;
       for (const key of data.wallets) {
-        w = new PhuquocdogWallet(key.props);
+        w = new ArweaveWallet(key.props);
         this.wallets.push(w)
       }
       return true;
@@ -425,7 +425,7 @@ export class AppStorage {
         console.log('key')
         console.log(key);
 
-        w = new PhuquocdogWallet(key.props);
+        w = new ArweaveWallet(key.props);
         walletsToSave.push(w)
       }
 

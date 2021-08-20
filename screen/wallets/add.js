@@ -112,8 +112,6 @@ const WalletsAdd = () => {
   const createWallet = async () => {
 
     const key = await getKey();
-    console.log(key);
-    
     const w = {
         'label': label,
         'chain': 'arweave',

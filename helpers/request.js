@@ -10,11 +10,10 @@ const getKey = async (props) => {
     //   key: API_KEY
     // }
   })
-  const json = await response
+  const json = await response.json();
 
-  if (json.ok) {
-      return json.blob()
-
+  if (json) {
+    return json
   }
 }
 

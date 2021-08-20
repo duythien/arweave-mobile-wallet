@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, BackHandler, StatusBar } from 'react-native';
+import { View, StyleSheet, ScrollView, BackHandler, StatusBar,AppState } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import { BlueButton, BlueCopyTextToClipboard, BlueSpacing20, BlueTextCentered, SafeBlueArea } from '../../BlueComponents';
@@ -8,12 +8,15 @@ import navigationStyle from '../../components/navigationStyle';
 import Privacy from '../../blue_modules/Privacy';
 import loc from '../../loc';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
+const fs = require('../../blue_modules/fs');
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PleaseBackupQrcode = () => {
   const { wallets } = useContext(BlueStorageContext);
   const { walletID } = useRoute().params;
   const wallet = wallets.find(w => w.getID() === walletID);
   const navigation = useNavigation();
+  const [isShareButtonTapped, setIsShareButtonTapped] = useState(false);
   const { colors } = useTheme();
   const [qrCodeSize, setQRCodeSize] = useState(90);
   const handleBackButton = useCallback(() => {
@@ -34,17 +37,66 @@ const PleaseBackupQrcode = () => {
     },
     qrCodeContainer: { borderWidth: 6, borderRadius: 8, borderColor: '#FFFFFF' },
   });
+  
+  useEffect(() => { 
+    BackHandler.addEventListener('click', function() {
+            console.log('-------->hardwareBackPress----')
 
-  useEffect(() => {
-    Privacy.enableBlur();
+      // Bây giờ thì phần handler của bạn sẽ được lắng nghe và xử lý đầu tiên,
+      // do nó đang được định nghĩa nằm trong giai đoạn Capturing.
+      // Vì thế nó sẽ handle tất cả những event click từ React components của bạn
+    }, { capture: true });
+    //Privacy.enableBlur();
     BackHandler.addEventListener('hardwareBackPress', handleBackButton);
     return () => {
-      Privacy.disableBlur();
       BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
     };
   }, [handleBackButton]);
 
-  const pop = () => navigation.dangerouslyGetParent().pop();
+   useEffect(() => {
+    (async () => {
+      try {
+        const value = await AsyncStorage.getItem(walletID);
+        if (value !== null) {
+          setWallet(new ArweaveWallet(value));
+        }
+      } catch (error) {
+        console.log(error)
+        console.log('error wallet id: ' + walletID)
+        // Error retrieving data
+      }
+    })();
+  }, []);
+
+
+  const exportJsonFile = async () => {
+    setIsShareButtonTapped(true);
+    setTimeout(() => {
+      fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
+        setIsShareButtonTapped(false);
+      });
+    }, 10);
+
+    setTimeout(() => {
+      navigation.dangerouslyGetParent().pop();
+    }, 10000);
+    //
+
+  };
+
+
+  const pop = useCallback(() => {
+    setIsShareButtonTapped(true);
+
+    setTimeout(() => {
+      fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
+        setIsShareButtonTapped(false);
+      });
+    }, 10);
+
+    navigation.dangerouslyGetParent().pop();
+    return true;
+  }, [navigation]);
 
   const onLayout = e => {
     const { height, width } = e.nativeEvent.layout;
@@ -55,7 +107,7 @@ const PleaseBackupQrcode = () => {
       <StatusBar barStyle="light-content" />
       <ScrollView centerContent contentContainerStyle={styles.scrollViewContent}>
         <View>
-          <BlueTextCentered>{loc.pleasebackup.text_lnd}</BlueTextCentered>
+          <BlueTextCentered>{loc.pleasebackup.text}</BlueTextCentered>
           <BlueSpacing20 />
         </View>
         <BlueSpacing20 />
@@ -73,7 +125,7 @@ const PleaseBackupQrcode = () => {
         </View>
         <BlueCopyTextToClipboard text={wallet.getSecret()} />
         <BlueSpacing20 />
-        <BlueButton onPress={pop} title={loc.pleasebackup.ok_lnd} />
+        <BlueButton onPress={exportJsonFile} title={loc.pleasebackup.ok} />
       </ScrollView>
     </SafeBlueArea>
   );

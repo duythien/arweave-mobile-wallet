@@ -2,6 +2,8 @@
 const Alice = '5DFignjD1nYb11saiStmZnJTno9yTW1RGfmXLhbyaQCEoSFq';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const createHash = require('create-hash');
+const encryption = require('../blue_modules/encryption');
 
 export class ArweaveWallet {
 
@@ -43,8 +45,16 @@ export class ArweaveWallet {
     return '0xf6c55dcd3414664b9b3f61aeedbc304ea391cbc40ff2590ea094896c4587f67c';
   }
   getSecret() {
-    return '123'
+
+    const myJSON = JSON.stringify(this.props.key);
+    return this.props.key.kty;
   }
+  getKeySecret() {
+
+    //const myJSON = JSON.stringify(this.props.key);
+    return this.props.key;
+  }
+  
   
   getIsFailure() {
     return 1;
@@ -98,4 +108,7 @@ export class ArweaveWallet {
   allowSignVerifyMessage() {
     return 'allowSignVerifyMessage()'
   }
+  hashIt = s => {
+    return createHash('sha256').update(s).digest().toString('hex');
+  };
 }

@@ -38,7 +38,7 @@ const ExportMultisigCoordinationSetup = () => {
   const exportTxtFile = async () => {
     setIsShareButtonTapped(true);
     setTimeout(() => {
-      fs.writeFileAndExport(wallet.getLabel() + '.txt', wallet.getXpub()).finally(() => {
+      fs.writeFileAndExport(wallet.getLabel() + '.txt', wallet.getKey()).finally(() => {
         setIsShareButtonTapped(false);
       });
     }, 10);
