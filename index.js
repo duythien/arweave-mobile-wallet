@@ -1,3 +1,4 @@
+//import crypto from 'crypto';
 import React, { useEffect } from 'react';
 import './shim.js';
 import { AppRegistry } from 'react-native';

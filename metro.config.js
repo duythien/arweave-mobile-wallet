@@ -17,6 +17,7 @@ module.exports = {
     ]),
     extraNodeModules: {
       crypto: require.resolve('react-native-crypto')
+      //SubtleCrypto: require.resolve('react-native-crypto')
     }
   },
   transformer: {

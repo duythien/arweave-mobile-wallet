@@ -31,12 +31,8 @@ import { useTheme, useNavigation } from '@react-navigation/native';
 import { Chain } from '../../models/bitcoinUnits';
 import loc from '../../loc';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
-import { keyring } from '@polkadot/ui-keyring';
-import { settings } from '@polkadot/ui-settings';
-import { cryptoWaitReady, mnemonicGenerate } from '@polkadot/util-crypto';
-import { ApiPromise, WsProvider} from '@polkadot/api';
-
-import { PhuquocdogWallet } from '../../class/wallets/phuquocdog-wallet';
+import { ArweaveWallet } from '../../class/wallets/arweave-wallet';
+import Arweave from 'arweave';
 
 const A = require('../../blue_modules/analytics');
 
@@ -49,7 +45,6 @@ const ButtonSelected = Object.freeze({
 const WalletsAdd = () => {
   const { colors } = useTheme();
   const { addWallet, saveToDisk, isAdancedModeEnabled } = useContext(BlueStorageContext);
-  const [isKeyring, setIsKeyring] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
   const [walletBaseURI, setWalletBaseURI] = useState('');
@@ -85,7 +80,7 @@ const WalletsAdd = () => {
   useEffect(() => {
     console.log('loc.wallets.details_title' + label);
     AsyncStorage.getItem(AppStorage.LNDHUB)
-      .then(url => setWalletBaseURI(url || 'https://node.phuquoc.dog'))
+      .then(url => setWalletBaseURI(url || 'https://arweave.org'))
       .catch(() => setWalletBaseURI(''));
     isAdancedModeEnabled()
       .then(setIsAdvancedOptionsEnabled)
@@ -93,25 +88,7 @@ const WalletsAdd = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAdvancedOptionsEnabled]);
 
-  const initialize = async (): Promise<void> => {
-    try {
-      keyring.loadAll({ ss58Format: 42, type: 'sr25519' });
-    } catch (e) {
-      console.log('Error loading keyring ', e);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    //await globalAny.localStorage.init();
-    await cryptoWaitReady();
-
-    //setLoading(false);
-    //_onClickNew();
-  };
-
-  if (isKeyring) {
-    initialize();
-  }
-
+  
   const entropyGenerated = newEntropy => {
     let entropyTitle;
     if (!newEntropy) {
@@ -130,30 +107,38 @@ const WalletsAdd = () => {
     setEntropyButtonText(entropyTitle);
   };
 
+  //const arweave = Arweave.init({});
+
+  //console.log('>>>>>>>' + arweave)
+
   const createWallet = async () => {
-    setIsKeyring(false);
-    const phrase = mnemonicGenerate(12);
-    const { address } = keyring.createFromUri(phrase);
 
-    const w = {
-      'label': label,
-      'chain': 'phuquocdog',
-      'address' : address,
-      'secret': phrase,
-      'preferredBalanceUnit': 'PQD',
-      'unconfirmed_balance': 0,
-      'balance_human': 0,
-      'type': 'phuquocdog',
-      'use_with_hardware_wallet': false
-    }
+    // arweave.wallets.generate().then((key) => {
+    //   console.log(key);
+    //     const w = {
+    //     'label': label,
+    //     'chain': 'arweave',
+    //     'address' : address,
+    //     'secret': phrase,
+    //     'preferredBalanceUnit': 'PQD',
+    //     'unconfirmed_balance': 0,
+    //     'balance_human': 0,
+    //     'type': 'arweave',
+    //     'use_with_hardware_wallet': false,
+    //     'key': key
+    //   }
 
-    pqd = new PhuquocdogWallet(w);
-    addWallet(pqd);
 
-    await saveToDisk();
-    navigate('PleaseBackup', {
-        walletID: address,
-    });
+
+    //   arweave = new ArweaveWallet(w);
+    //   //addWallet(arweave);
+
+    //   //await saveToDisk();
+    //   navigate('PleaseBackup', {
+    //       walletID: address,
+    //   });
+    // });
+    
 
     // //ReactNativeHapticFeedback.trigger('notificationSuccess', { ignoreAndroidSystemSettings: false });
     
