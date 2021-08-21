@@ -210,7 +210,6 @@ const WalletCarouselItem = ({ item, index, onPress, handleLongPress, isSelectedW
 
   useEffect(() => {
     (async () => {
-      console.log('item')
       if (item) {
         try {
           const result = await item.getBalanceHuman();

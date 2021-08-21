@@ -56,16 +56,16 @@ const PleaseBackupQrcode = () => {
 
   const exportJsonFile = async () => {
     setIsShareButtonTapped(true);
-    //console.log(wallet.getKeySecret());
+    console.log(wallet.getKeySecret());
     setTimeout(() => {
-      fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
+      fs.writeFileAndExport(wallet.getLabel() + '.json', JSON.stringify(wallet.getKeySecret())).finally(() => {
         setIsShareButtonTapped(false);
       });
     }, 10);
 
     setTimeout(() => {
       navigation.dangerouslyGetParent().pop();
-    }, 10000);
+    }, 9500);
     
 
   };
@@ -109,7 +109,7 @@ const PleaseBackupQrcode = () => {
             size={qrCodeSize}
           />
         </View>
-        <BlueCopyTextToClipboard text={wallet.getSecret()} />
+        <BlueCopyTextToClipboard text={wallet.getAddress()} />
         <BlueSpacing20 />
         <BlueButton onPress={exportJsonFile} title={loc.pleasebackup.ok} />
       </ScrollView>

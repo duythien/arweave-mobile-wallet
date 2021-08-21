@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Platform, View, Keyboard, StatusBar, StyleSheet, Alert } from 'react-native';
+import { Platform, View, Keyboard, StatusBar, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import {
@@ -32,9 +32,20 @@ const WalletsImport = () => {
   const [importText, setImportText] = useState(label);
   const navigation = useNavigation();
   const { colors } = useTheme();
-  const [isKeyring, setIsKeyring] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const styles = StyleSheet.create({
+    flex: {
+      flex: 1,
+      justifyContent: 'space-around'
+    },
+    horizontal: {
+      backgroundColor: colors.elevated
+    },
+    loading: {
+      flex: 1,
+      justifyContent: 'center',
+    },
     root: {
       paddingTop: 40,
       backgroundColor: colors.elevated,
@@ -61,40 +72,35 @@ const WalletsImport = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  
-
-  
-
   const pickFile = async () => {
 
       const { data } = await fs.showFilePickerAndReadFileJson();
-        console.log('pickFile')
-            console.log(data);
-                let a = await getAddress(data)
+      const address = await getAddress(JSON.parse(data));
 
-      // const w = {
-      //     'label': 'Import wallet',
-      //     'chain': 'arweave',
-      //     'preferredBalanceUnit': 'PQD',
-      //     'unconfirmed_balance': 0,
-      //     'balance_human': 0,
-      //     'type': 'arweave',
-      //     'use_with_hardware_wallet': false,
-      //     'key': data //JSON.parse(data)
-      //   }
+      const w = {
+        'label': label,
+        'chain': 'arweave',
+        'unconfirmed_balance': 0,
+        'type': 'arweave',
+        'key': data,
+        'address': address
+      }
+    
+    arweave = new ArweaveWallet(w);
+    addWallet(arweave);
+    await saveToDisk();
+    setIsLoading(false);
+    setTimeout(() => {
+      navigation.dangerouslyGetParent().pop();
+    }, 1000);
 
-
-
-      // arweave = new ArweaveWallet(w);
-      // let a = await arweave.getBalanceHuman();
-      // console.log(a);
-
-      //addWallet(arweave);
-      //await saveToDisk();
-      console.log('----->')
   }
 
-  return (
+  return !isLoading ? (
+    <View style={[styles.loading, styles.horizontal]}>
+      <ActivityIndicator />
+    </View>
+    ) : (
     <SafeBlueArea style={styles.root}>
       <StatusBar barStyle="light-content" />
       <BlueSpacing20 />
@@ -113,7 +119,7 @@ const WalletsImport = () => {
       <BlueSpacing20 />
       
     </SafeBlueArea>
-  );
+  )
 };
 
 WalletsImport.navigationOptions = navigationStyle({}, opts => ({ ...opts, title: loc.wallets.import_title }));

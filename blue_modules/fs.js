@@ -252,6 +252,7 @@ const showFilePickerAndReadFileJson = async function () {
     let file = false;
     
     file = await RNFS.readFile(uri, 'utf8');
+
     return { data: file, uri: decodeURI(res.uri) };
   } catch (err) {
     console.log(err)
@@ -299,5 +300,5 @@ module.exports.showFilePickerAndReadFile = showFilePickerAndReadFile;
 module.exports.showImagePickerAndReadImage = showImagePickerAndReadImage;
 module.exports.takePhotoWithImagePickerAndReadPhoto = takePhotoWithImagePickerAndReadPhoto;
 module.exports.showActionSheet = showActionSheet;
-//module.exports.showFilePickerAndReadFileJson = showFilePickerAndReadFileJson;
+module.exports.showFilePickerAndReadFileJson = showFilePickerAndReadFileJson;
 

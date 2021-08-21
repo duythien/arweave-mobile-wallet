@@ -80,7 +80,7 @@ const WalletsAdd = () => {
   useEffect(() => {
     console.log('loc.wallets.details_title' + label);
     AsyncStorage.getItem(AppStorage.LNDHUB)
-      .then(url => setWalletBaseURI(url || 'https://arweave.org'))
+      .then(url => setWalletBaseURI(url || 'https://arweave.net'))
       .catch(() => setWalletBaseURI(''));
     isAdancedModeEnabled()
       .then(setIsAdvancedOptionsEnabled)
