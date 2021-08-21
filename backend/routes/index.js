@@ -1,7 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const Arweave = require('arweave');
-const arweave = Arweave.init({});
+const arweave = Arweave.init({
+  host: 'arweave.net',
+  port: 443,
+  protocol: 'https',
+  logging: false
+});
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -9,18 +14,27 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/arweave/key', function(req, res, next) {
-    arweave.wallets.generate().then((key) => {
-      res.send(key);
-
-    });
+  arweave.wallets.generate().then((key) => {
+    res.send(key);
+  });
 });
 router.post('/arweave/address', function(req, res, next) {
   try{
     let key = req.body;
-    console.log(key);
-
     arweave.wallets.jwkToAddress(key).then((address) => {
-      res.send(address);
+      console.log('address' + address)
+      res.send({'data' : address});
+    });
+  }catch(e) {
+    next(e);
+    res.send(e);
+  }
+ 
+});
+router.post('/arweave/last_transaction', function(req, res, next) {
+  try{
+    arweave.wallets.getLastTransactionID(req.body.address).then((id) => {
+      res.send({'data' : id});
     });
   }catch(e) {
     next(e);
@@ -30,10 +44,13 @@ router.post('/arweave/address', function(req, res, next) {
   }
  
 });
-router.get('/arweave/last_transaction', function(req, res, next) {
+
+router.post('/arweave/balance', function(req, res, next) {
   try{
-    arweave.wallets.getLastTransactionID(req.body.address).then((id) => {
-      res.send(id);
+    arweave.wallets.getBalance(req.body.address).then((balance) => {
+      let winston = balance;
+      let ar = arweave.ar.winstonToAr(balance);
+      res.send({'data' : ar});
     });
   }catch(e) {
     next(e);

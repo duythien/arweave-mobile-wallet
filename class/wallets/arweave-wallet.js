@@ -1,7 +1,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {getAddress} from '../../helpers/request';
+import {getAddress, getBalance, getLastTransactionID} from '../../helpers/request';
 
 export class ArweaveWallet {
 
@@ -10,33 +10,21 @@ export class ArweaveWallet {
     this.balanceHuman = '0 AR';
   }
 
-  async connect (account) {
-      
-
-  }
-
-  // getAddress() {
-
-  // }
-  getBalance() {
-    return 10;
-
-  }
 
   setBalanceHuman(b){
-    if (b != 0) {
-      return this.balanceHuman = b;
-    }
+    return this.balanceHuman = b;
+  }
+
+  getBalance(){
+    
   }
 
   async getBalanceHuman() {
 
     try {
-      const result = await getAddress(this.props.key);
-      console.log(result);
-
+      const result = await getBalance(this.getAddress());
       if (result) {
-        this.setBalanceHuman(result.free.toHuman());
+        this.setBalanceHuman(result + 'AR ');
 
       }
     } catch (e) {
@@ -45,19 +33,22 @@ export class ArweaveWallet {
   
     return this.balanceHuman;
   }
-  latestTransactionText() {
-    return '0xf6c55dcd3414664b9b3f61aeedbc304ea391cbc40ff2590ea094896c4587f67c';
+  
+  async getLastTransactionID() {
+    try {
+      const result = await getLastTransactionID(this.getAddress());
+      if (result) {
+        return result;
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    return null;
   }
-  getLastTransactionID() {
-
-  }
-  getSecret() {
-
-    const myJSON = JSON.stringify(this.props.key);
-    return this.props.key.kty;
+  getAddress() {
+    return this.props.address;
   }
   getKeySecret() {
-
     //const myJSON = JSON.stringify(this.props.key);
     return this.props.key;
   }
@@ -77,7 +68,7 @@ export class ArweaveWallet {
     return 'getPreferredBalanceUnit';
   }
   getID() {
-    return this.props.key.n;
+    return this.props.address;
   }
   getLatestTransactionTime() {
     return 'getLatestTransactionTime'

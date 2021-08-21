@@ -316,7 +316,7 @@ export class AppStorage {
    * @returns {Promise.<boolean>}
    */
   async loadFromDisk(password) {
-    this.resetData();
+    //this.resetData();
     let data = await this.getItem('data');
   
     if (data !== null) {
@@ -422,9 +422,6 @@ export class AppStorage {
 
       console.log(this.wallets);
       for (const key of this.wallets) {
-        console.log('key')
-        console.log(key);
-
         w = new ArweaveWallet(key.props);
         walletsToSave.push(w)
       }
@@ -433,9 +430,7 @@ export class AppStorage {
       let data = {
         wallets: walletsToSave,
         tx_metadata: this.tx_metadata,
-      };
-      console.log(JSON.stringify(data));
-     
+      };     
       await this.setItem('data', JSON.stringify(data));
       //await this.setItem(AppStorage.FLAG_ENCRYPTED, '');
 

@@ -192,6 +192,7 @@ const WalletCarouselItem = ({ item, index, onPress, handleLongPress, isSelectedW
   const itemWidth = width * 0.82 > 375 ? 375 : width * 0.82;
   const isLargeScreen = Platform.OS === 'android' ? isTablet() : width >= Dimensions.get('screen').width / 2 && (isTablet() || isDesktop);
   const [balance, setBalance] = useState('');
+  const [transaction, setTransaction] = useState('');
 
   const onPressedIn = () => {
     const props = { duration: 50 };
@@ -207,19 +208,26 @@ const WalletCarouselItem = ({ item, index, onPress, handleLongPress, isSelectedW
     Animated.spring(scaleValue, props).start();
   };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const result = await item.getBalanceHuman();
-  //       if (result) {
-  //         setBalance(result)
-  //       }
-  //     } catch (e) {
-  //       console.log(e)
-  //     }
+  useEffect(() => {
+    (async () => {
+      console.log('item')
+      if (item) {
+        try {
+          const result = await item.getBalanceHuman();
+          if (result) {
+            setBalance(result)
+          }
+          const transaction= await item.getLastTransactionID();
+          if (transaction) {
+            setTransaction(transaction);
+          }
+        } catch (e) {
+          console.log(e)
+        }
+      }      
       
-  //   })();
-  // });
+    })();
+  });
 
   if (!item)
     return isImportingWallet ? (
@@ -255,15 +263,6 @@ const WalletCarouselItem = ({ item, index, onPress, handleLongPress, isSelectedW
       //image = I18nManager.isRTL ? require('../img/btc-shape-rtl.png') : require('../img/btc-shape.png');
   }
 
-  // const latestTransactionText =
-  //   walletTransactionUpdateStatus === true || walletTransactionUpdateStatus === item.getID()
-  //     ? loc.transactions.updating
-  //     : item.getBalance() !== 0 && item.getLatestTransactionTime() === 0
-  //     ? loc.wallets.pull_to_refresh
-  //     : item.getTransactions().find(tx => tx.confirmations === 0)
-  //     ? loc.transactions.pending
-  //     : transactionTimeToReadable(item.getLatestTransactionTime());
-  const latestTransactionText = item.latestTransactionText();
   return (
     <Animated.View
       style={[
@@ -309,7 +308,7 @@ const WalletCarouselItem = ({ item, index, onPress, handleLongPress, isSelectedW
           </Text>
 
           <Text numberOfLines={1} style={[iStyles.latestTxTime, { color: colors.inverseForegroundColor }]}>
-            {latestTransactionText}
+            {transaction}
           </Text>
         </LinearGradient>
       </TouchableWithoutFeedback>

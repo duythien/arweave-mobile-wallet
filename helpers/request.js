@@ -6,9 +6,11 @@ const getKey = async (props) => {
   const url = `${API}/arweave/key`
   const response = await fetch(url, {
     method: 'GET',
-    // headers: {
-    //   key: API_KEY
-    // }
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer xxxx'
+    },
   })
   const json = await response.json();
 
@@ -16,11 +18,8 @@ const getKey = async (props) => {
     return json
   }
 }
-
-
 const getAddress = async (props) => {
   const url = `${API}/arweave/address`
-  console.log(props)
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -28,11 +27,43 @@ const getAddress = async (props) => {
       'Content-Type': 'application/json',
       Authorization: 'Bearer xxxx'
     },
-    body: props
+    body: JSON.stringify(props)
   })
   const json = await response.json()
   if (json) {
-    return json
+    return json.data
+  }
+}
+const getBalance = async (address) => {
+  const url = `${API}/arweave/balance`
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer xxxx'
+    },
+    body: JSON.stringify({'address' : address})
+  })
+  const json = await response.json()
+  if (json) {
+    return json.data
+  }
+}
+const getLastTransactionID = async (address) => {
+  const url = `${API}/arweave/last_transaction`
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer xxxx'
+    },
+    body: JSON.stringify({'address' : address})
+  })
+  const json = await response.json();
+  if (json) {
+    return json.data
   }
 }
 
@@ -40,5 +71,7 @@ const getAddress = async (props) => {
 
 export {
   getKey,
-  getAddress
+  getAddress,
+  getBalance,
+  getLastTransactionID
 }

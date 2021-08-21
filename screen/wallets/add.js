@@ -32,7 +32,7 @@ import { Chain } from '../../models/bitcoinUnits';
 import loc from '../../loc';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
 import { ArweaveWallet } from '../../class/wallets/arweave-wallet';
-import { getKey } from '../../helpers/request';
+import { getKey,getAddress } from '../../helpers/request';
 
 const A = require('../../blue_modules/analytics');
 
@@ -112,29 +112,25 @@ const WalletsAdd = () => {
   const createWallet = async () => {
 
     const key = await getKey();
+    const address = await getAddress(key);
+
     const w = {
-        'label': label,
-        'chain': 'arweave',
-        'preferredBalanceUnit': 'PQD',
-        'unconfirmed_balance': 0,
-        'balance_human': 0,
-        'type': 'arweave',
-        'use_with_hardware_wallet': false,
-        'key': key
-      }
-
-
-
-      arweave = new ArweaveWallet(w);
-      addWallet(arweave);
-
-      await saveToDisk();
-      navigate('PleaseBackupQrcode', {
-          walletID: key.n,
-      });
-    // });
+      'label': label,
+      'chain': 'arweave',
+      'unconfirmed_balance': 0,
+      'type': 'arweave',
+      'key': key,
+      'address': address
+    }
     
 
+    arweave = new ArweaveWallet(w);
+    addWallet(arweave);
+
+    await saveToDisk();
+    navigate('PleaseBackupQrcode', {
+        walletID: address,
+    });
     // //ReactNativeHapticFeedback.trigger('notificationSuccess', { ignoreAndroidSystemSettings: false });
     
     // setIsLoading(false);

@@ -56,33 +56,33 @@ const PleaseBackupQrcode = () => {
 
   const exportJsonFile = async () => {
     setIsShareButtonTapped(true);
-    console.log(wallet.getKeySecret());
+    //console.log(wallet.getKeySecret());
     setTimeout(() => {
       fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
         setIsShareButtonTapped(false);
       });
     }, 10);
 
-    // setTimeout(() => {
-    //   navigation.dangerouslyGetParent().pop();
-    // }, 10000);
-    //
+    setTimeout(() => {
+      navigation.dangerouslyGetParent().pop();
+    }, 10000);
+    
 
   };
 
 
-  const pop = useCallback(() => {
-    setIsShareButtonTapped(true);
+  // const pop = useCallback(() => {
+  //   setIsShareButtonTapped(true);
 
-    setTimeout(() => {
-      fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
-        setIsShareButtonTapped(false);
-      });
-    }, 10);
+  //   setTimeout(() => {
+  //     fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
+  //       setIsShareButtonTapped(false);
+  //     });
+  //   }, 10);
 
-    navigation.dangerouslyGetParent().pop();
-    return true;
-  }, [navigation]);
+  //   navigation.dangerouslyGetParent().pop();
+  //   return true;
+  // }, [navigation]);
 
   const onLayout = e => {
     const { height, width } = e.nativeEvent.layout;
@@ -99,7 +99,7 @@ const PleaseBackupQrcode = () => {
         <BlueSpacing20 />
         <View style={styles.qrCodeContainer}>
           <QRCode
-            value={wallet.getSecret()}
+            value={wallet.getAddress()}
             logo={require('../../img/qr-code.png')}
             logoSize={90}
             color="#000000"

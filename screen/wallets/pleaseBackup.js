@@ -66,7 +66,6 @@ const PleaseBackup = () => {
 
   useEffect(() => {
     (async () => {
-      console.log(wallet);
       try {
         const value = await AsyncStorage.getItem(walletID);
         if (value !== null) {
