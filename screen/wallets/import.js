@@ -18,10 +18,9 @@ import loc from '../../loc';
 import { isDesktop, isMacCatalina } from '../../blue_modules/environment';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
 
-import { keyring } from '@polkadot/ui-keyring';
-import { cryptoWaitReady, mnemonicGenerate } from '@polkadot/util-crypto';
-import { PhuquocdogWallet } from '../../class/wallets/phuquocdog-wallet';
+import { ArweaveWallet } from '../../class/wallets/arweave-wallet';
 
+import { getAddress } from '../../helpers/request';
 const fs = require('../../blue_modules/fs');
 
 const WalletsImport = () => {
@@ -59,122 +58,41 @@ const WalletsImport = () => {
   }, []);
 
   useEffect(() => {
-    if (triggerImport) importButtonPressed();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initialize = async (): Promise<void> => {
-    try {
-      keyring.loadAll({ ss58Format: 42, type: 'sr25519' });
-            console.log('Error loading keyring >>>>11');
-
-    } catch (e) {
-      console.log('Error loading keyring >>>>>>>', e.message);
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    //await globalAny.localStorage.init();
-    await cryptoWaitReady();
-
-    //setLoading(false);
-    //_onClickNew();
-  };
-
-  if (isKeyring) {
-    initialize();
-  }
-
-  const importButtonPressed = () => {
-    if (importText.trim().length === 0) {
-      return;
-    }
-    importMnemonic(importText);
-  };
-
-  /**
-   *
-   * @param importText
-   */
-  const importMnemonic = async importText => {
-    if (isImportingWallet && isImportingWallet.isFailure === false) {
-      return;
-    }
+  
 
   
-    try {
-      const { address } = keyring.createFromUri(importText);
 
-      const w = {
-        'label': label,
-        'chain': 'phuquocdog',
-        'address' : address,
-        'secret': importText,
-        'preferredBalanceUnit': 'PQD',
-        'unconfirmed_balance': 0,
-        'balance_human': 0,
-        'use_with_hardware_wallet': false
-      }
-      setIsKeyring(false);
+  const pickFile = async () => {
+
+      const { data } = await fs.showFilePickerAndReadFileJson();
+        console.log('pickFile')
+            console.log(data);
+                let a = await getAddress(data)
+
+      // const w = {
+      //     'label': 'Import wallet',
+      //     'chain': 'arweave',
+      //     'preferredBalanceUnit': 'PQD',
+      //     'unconfirmed_balance': 0,
+      //     'balance_human': 0,
+      //     'type': 'arweave',
+      //     'use_with_hardware_wallet': false,
+      //     'key': data //JSON.parse(data)
+      //   }
 
 
-      pqd = new PhuquocdogWallet(w);
-      addWallet(pqd);
-      await saveToDisk();
-      navigation.dangerouslyGetParent().pop();
-      //await new Promise(resolve => setTimeout(resolve, 500)); // giving some time to animations
 
-    } catch (error) {
-      console.log(error);
-      ReactNativeHapticFeedback.trigger('notificationError', { ignoreAndroidSystemSettings: false });
-      Alert.alert(
-        loc.wallets.add_details,
-        loc.wallets.list_import_problem,
-        [
-          {
-            text: loc.wallets.list_tryagain,
-            onPress: () => {
-              navigation.navigate('AddWalletRoot', { screen: 'ImportWallet', params: { label: importText } });
-              WalletImport.removePlaceholderWallet();
-            },
-            style: 'default',
-          },
-          {
-            text: loc._.cancel,
-            onPress: () => {
-              WalletImport.removePlaceholderWallet();
-            },
-            style: 'cancel',
-          },
-        ],
-        { cancelable: false },
-      );
-    }
-  };
+      // arweave = new ArweaveWallet(w);
+      // let a = await arweave.getBalanceHuman();
+      // console.log(a);
 
-  /**
-   *
-   * @param value
-   */
-  const onBarScanned = value => {
-    if (value && value.data) value = value.data + ''; // no objects here, only strings
-    setImportText(value);
-    setTimeout(() => importMnemonic(value), 500);
-  };
-
-  const importScan = () => {
-    if (isMacCatalina) {
-      fs.showActionSheet().then(onBarScanned);
-    } else {
-      navigation.navigate('ScanQRCodeRoot', {
-        screen: 'ScanQRCode',
-        params: {
-          launchedBy: route.name,
-          onBarScanned: onBarScanned,
-          showFileImportButton: true,
-        },
-      });
-    }
-  };
+      //addWallet(arweave);
+      //await saveToDisk();
+      console.log('----->')
+  }
 
   return (
     <SafeBlueArea style={styles.root}>
@@ -182,52 +100,18 @@ const WalletsImport = () => {
       <BlueSpacing20 />
       <BlueFormLabel>{loc.wallets.import_explanation}</BlueFormLabel>
       <BlueSpacing20 />
-      <BlueFormMultiInput
-        testID="MnemonicInput"
-        value={importText}
-        contextMenuHidden={!isDesktop}
-        onChangeText={setImportText}
-        inputAccessoryViewID={BlueDoneAndDismissKeyboardInputAccessory.InputAccessoryViewID}
-      />
+      <BlueSpacing20 />
+      <BlueSpacing20 />
+      <BlueSpacing20 />
+      <BlueSpacing20 />
+      <BlueSpacing20 />
+      <BlueSpacing20 />
+      <BlueSpacing20 />
+
+      <BlueButton title={'Darg your key file or click to select on'} onPress={pickFile} testID="ScanImport" />
 
       <BlueSpacing20 />
-      <View style={styles.center}>
-        <>
-          <BlueButton
-            testID="DoImport"
-            disabled={importText.trim().length === 0}
-            title={loc.wallets.import_do_import}
-            onPress={importButtonPressed}
-          />
-          <BlueSpacing20 />
-          <BlueButtonLink title={loc.wallets.import_scan_qr} onPress={importScan} testID="ScanImport" />
-        </>
-      </View>
-      {Platform.select({
-        ios: (
-          <BlueDoneAndDismissKeyboardInputAccessory
-            onClearTapped={() => {
-              setImportText('');
-            }}
-            onPasteTapped={text => {
-              setImportText(text);
-              Keyboard.dismiss();
-            }}
-          />
-        ),
-        android: isToolbarVisibleForAndroid && (
-          <BlueDoneAndDismissKeyboardInputAccessory
-            onClearTapped={() => {
-              setImportText('');
-              Keyboard.dismiss();
-            }}
-            onPasteTapped={text => {
-              setImportText(text);
-              Keyboard.dismiss();
-            }}
-          />
-        ),
-      })}
+      
     </SafeBlueArea>
   );
 };

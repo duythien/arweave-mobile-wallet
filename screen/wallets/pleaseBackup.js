@@ -8,7 +8,6 @@ import Privacy from '../../blue_modules/Privacy';
 import loc from '../../loc';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import QRCode from 'react-native-qrcode-svg';
 
 const fs = require('../../blue_modules/fs');
 
@@ -17,8 +16,6 @@ const PleaseBackup = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { walletID } = useRoute().params;
   //const [wallet, setWallet] = useState();
-  const [qrCodeSize, setQRCodeSize] = useState(90);
-
   const wallet = wallets.find(w => w.getID() === walletID);
   const navigation = useNavigation();
   const { colors } = useTheme();
@@ -113,20 +110,7 @@ const PleaseBackup = () => {
         <View style={styles.please}>
           <Text style={[styles.pleaseText, stylesHook.pleaseText]}>{loc.pleasebackup.text}</Text>
         </View>
-
-        <View style={styles.qrCodeContainer}>
-          <QRCode
-            value={wallet.getSecret()}
-            logo={require('../../img/qr-code.png')}
-            logoSize={90}
-            color="#000000"
-            logoBackgroundColor={colors.brandingColor}
-            backgroundColor="#FFFFFF"
-            ecl="H"
-            size={qrCodeSize}
-          />
-        </View>
-
+        
         <View style={styles.list}>
           <View style={styles.secret}>{renderSecret()}</View>
         </View>

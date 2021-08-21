@@ -207,17 +207,19 @@ const WalletCarouselItem = ({ item, index, onPress, handleLongPress, isSelectedW
     Animated.spring(scaleValue, props).start();
   };
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const result = await item.getBalanceHuman();
-        if (result) {
-          setBalance(result)
-        }
-      } catch (_) {}
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const result = await item.getBalanceHuman();
+  //       if (result) {
+  //         setBalance(result)
+  //       }
+  //     } catch (e) {
+  //       console.log(e)
+  //     }
       
-    })();
-  });
+  //   })();
+  // });
 
   if (!item)
     return isImportingWallet ? (
@@ -338,9 +340,6 @@ const cStyles = StyleSheet.create({
 });
 
 const WalletsCarousel = forwardRef((props, ref) => {
-  console.log('--------WalletsCarousel')
-  console.log(props)
-  console.log(ref);
   
   const { preferredFiatCurrency, language, isImportingWallet } = useContext(BlueStorageContext);
   const renderItem = useCallback(

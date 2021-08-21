@@ -38,22 +38,7 @@ const PleaseBackupQrcode = () => {
     qrCodeContainer: { borderWidth: 6, borderRadius: 8, borderColor: '#FFFFFF' },
   });
   
-  useEffect(() => { 
-    BackHandler.addEventListener('click', function() {
-            console.log('-------->hardwareBackPress----')
-
-      // Bây giờ thì phần handler của bạn sẽ được lắng nghe và xử lý đầu tiên,
-      // do nó đang được định nghĩa nằm trong giai đoạn Capturing.
-      // Vì thế nó sẽ handle tất cả những event click từ React components của bạn
-    }, { capture: true });
-    //Privacy.enableBlur();
-    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-    return () => {
-      BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
-    };
-  }, [handleBackButton]);
-
-   useEffect(() => {
+  useEffect(() => {
     (async () => {
       try {
         const value = await AsyncStorage.getItem(walletID);
@@ -71,15 +56,16 @@ const PleaseBackupQrcode = () => {
 
   const exportJsonFile = async () => {
     setIsShareButtonTapped(true);
+    console.log(wallet.getKeySecret());
     setTimeout(() => {
       fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
         setIsShareButtonTapped(false);
       });
     }, 10);
 
-    setTimeout(() => {
-      navigation.dangerouslyGetParent().pop();
-    }, 10000);
+    // setTimeout(() => {
+    //   navigation.dangerouslyGetParent().pop();
+    // }, 10000);
     //
 
   };

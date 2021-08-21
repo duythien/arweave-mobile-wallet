@@ -197,6 +197,9 @@ const showFilePickerAndReadFile = async function () {
     });
 
     const uri = Platform.OS === 'ios' ? decodeURI(res.uri) : res.uri;
+
+    console.log('showFilePickerAndReadFile');
+    console.log(uri)
     // ^^ some weird difference on how spaces in filenames are treated on ios and android
 
     let file = false;
@@ -222,6 +225,36 @@ const showFilePickerAndReadFile = async function () {
     file = await RNFS.readFile(uri);
     return { data: file, uri: decodeURI(res.uri) };
   } catch (err) {
+    return { data: false, uri: false };
+  }
+};
+
+const showFilePickerAndReadFileJson = async function () {
+  try {
+    const res = await DocumentPicker.pick({
+      type:
+        Platform.OS === 'ios'
+          ? [
+              'io.bluewallet.psbt',
+              'io.bluewallet.psbt.txn',
+              'io.bluewallet.backup',
+              DocumentPicker.types.plainText,
+              'public.json',
+              DocumentPicker.types.images,
+            ]
+          : [DocumentPicker.types.allFiles],
+    });
+
+    const uri = Platform.OS === 'ios' ? decodeURI(res.uri) : res.uri;
+
+    // ^^ some weird difference on how spaces in filenames are treated on ios and android
+
+    let file = false;
+    
+    file = await RNFS.readFile(uri, 'utf8');
+    return { data: file, uri: decodeURI(res.uri) };
+  } catch (err) {
+    console.log(err)
     return { data: false, uri: false };
   }
 };
@@ -266,3 +299,5 @@ module.exports.showFilePickerAndReadFile = showFilePickerAndReadFile;
 module.exports.showImagePickerAndReadImage = showImagePickerAndReadImage;
 module.exports.takePhotoWithImagePickerAndReadPhoto = takePhotoWithImagePickerAndReadPhoto;
 module.exports.showActionSheet = showActionSheet;
+//module.exports.showFilePickerAndReadFileJson = showFilePickerAndReadFileJson;
+

@@ -1,9 +1,7 @@
 
-const Alice = '5DFignjD1nYb11saiStmZnJTno9yTW1RGfmXLhbyaQCEoSFq';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const createHash = require('create-hash');
-const encryption = require('../blue_modules/encryption');
+import {getAddress} from '../../helpers/request';
 
 export class ArweaveWallet {
 
@@ -14,9 +12,12 @@ export class ArweaveWallet {
 
   async connect (account) {
       
+
   }
 
+  // getAddress() {
 
+  // }
   getBalance() {
     return 10;
 
@@ -31,18 +32,24 @@ export class ArweaveWallet {
   async getBalanceHuman() {
 
     try {
-      const result = await this.connect(this.props.address);
+      const result = await getAddress(this.props.key);
+      console.log(result);
 
       if (result) {
         this.setBalanceHuman(result.free.toHuman());
 
       }
-    } catch (_) {}
+    } catch (e) {
+      console.log(e)
+    }
   
     return this.balanceHuman;
   }
   latestTransactionText() {
     return '0xf6c55dcd3414664b9b3f61aeedbc304ea391cbc40ff2590ea094896c4587f67c';
+  }
+  getLastTransactionID() {
+
   }
   getSecret() {
 
@@ -108,7 +115,4 @@ export class ArweaveWallet {
   allowSignVerifyMessage() {
     return 'allowSignVerifyMessage()'
   }
-  hashIt = s => {
-    return createHash('sha256').update(s).digest().toString('hex');
-  };
 }

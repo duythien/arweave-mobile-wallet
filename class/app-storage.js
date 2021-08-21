@@ -316,7 +316,7 @@ export class AppStorage {
    * @returns {Promise.<boolean>}
    */
   async loadFromDisk(password) {
-    //this.resetData();
+    this.resetData();
     let data = await this.getItem('data');
   
     if (data !== null) {
@@ -429,8 +429,6 @@ export class AppStorage {
         walletsToSave.push(w)
       }
 
-      console.log('saveToDiskwalletsToSave')
-      console.log(walletsToSave);
       
       let data = {
         wallets: walletsToSave,
