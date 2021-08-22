@@ -8,6 +8,7 @@ export class ArweaveWallet {
   constructor(props) {
     this.props = props;
     this.balanceHuman = '0 AR';
+    this.userHasSavedExport = false;
   }
 
 
@@ -111,5 +112,8 @@ export class ArweaveWallet {
   }
   setUserHasSavedExport(v){
     this.setUserHasSavedExport = v
+  }
+  getType() {
+    return this.props.type;
   }
 }

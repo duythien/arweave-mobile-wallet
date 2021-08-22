@@ -39,7 +39,6 @@ import { isDesktop, isMacCatalina } from '../../blue_modules/environment';
 import BlueClipboard from '../../blue_modules/clipboard';
 
 const fs = require('../../blue_modules/fs');
-const BlueElectrum = require('../../blue_modules/BlueElectrum');
 const LocalQRCode = require('@remobile/react-native-qrcode-local-image');
 
 const buttonFontSize =
@@ -132,7 +131,7 @@ const WalletTransactions = () => {
 
     setOptions({
       headerStyle: {
-        backgroundColor: WalletGradient.headerColorFor(wallet.type),
+        backgroundColor: WalletGradient.headerColorFor(wallet.getType()),
         borderBottomWidth: 0,
         elevation: 0,
         // shadowRadius: 0,
@@ -237,7 +236,6 @@ const WalletTransactions = () => {
     } else {
       style.opacity = 1.0;
     }
-
     return (
       <View style={styles.flex}>
         <View style={styles.listHeader}>
@@ -255,7 +253,7 @@ const WalletTransactions = () => {
             The idea is to avoid showing on iOS an appstore/market style app that goes against the TOS.
 
            */}
-          {wallet.getTransactions().length > 0 && wallet.type !== LightningCustodianWallet.type && renderSellFiat()}
+          {wallet.getTransactions().length > 0 && wallet.getType() !== LightningCustodianWallet.type && renderSellFiat()}
         </View>
         <View style={[styles.listHeaderTextRow, stylesHook.listHeaderTextRow]}>
           <Text style={[styles.listHeaderText, stylesHook.listHeaderText]}>{loc.transactions.list_title}</Text>
@@ -348,7 +346,7 @@ const WalletTransactions = () => {
         <TouchableOpacity
           accessibilityRole="button"
           onPress={() => {
-            if (wallet.type === LightningCustodianWallet.type) {
+            if (wallet.getType() === LightningCustodianWallet.type) {
               navigate('LappBrowserRoot', {
                 screen: 'LappBrowser',
                 params: { walletID },
@@ -413,7 +411,7 @@ const WalletTransactions = () => {
   const onWalletSelect = async selectedWallet => {
     if (selectedWallet) {
       navigate('WalletTransactions', {
-        walletType: wallet.type,
+        walletType: wallet.getType(),
         walletID: wallet.getID(),
         key: `WalletTransactions-${wallet.getID()}`,
       });
@@ -500,7 +498,7 @@ const WalletTransactions = () => {
       return navigate('ScanLndInvoiceRoot', { screen: 'ScanLndInvoice', params: { walletID: wallet.getID() } });
     }
 
-    if (wallet.type === WatchOnlyWallet.type && wallet.isHd() && !wallet.useWithHardwareWalletEnabled()) {
+    if (wallet.getType() === WatchOnlyWallet.type && wallet.isHd() && !wallet.useWithHardwareWalletEnabled()) {
       return Alert.alert(
         loc.wallets.details_title,
         loc.transactions.enable_offline_signing,
@@ -614,9 +612,9 @@ const WalletTransactions = () => {
         }
         onManageFundsPressed={() => {
           console.log('onManageFundsPressed')
-          if (wallet.type === MultisigHDWallet.type) {
+          if (wallet.getType() === MultisigHDWallet.type) {
             navigateToViewEditCosigners();
-          } else if (wallet.type === LightningCustodianWallet.type) {
+          } else if (wallet.getType() === LightningCustodianWallet.type) {
             if (wallet.getUserHasSavedExport()) {
               setIsManageFundsModalVisible(true);
             } else {
@@ -692,7 +690,7 @@ const WalletTransactions = () => {
               if (wallet.chain === Chain.OFFCHAIN) {
                 navigate('LNDCreateInvoiceRoot', { screen: 'LNDCreateInvoice', params: { walletID: wallet.getID() } });
               } else {
-                navigate('ReceiveDetailsRoot', { screen: 'ReceiveDetails', params: { walletID: wallet.getID() } });
+                navigate('ReceiveDetailsRoot', { screen: 'ReceiveDetails', params: { walletID: wallet.getID(), address: wallet.getAddress()} });
               }
             }}
             icon={
@@ -702,7 +700,7 @@ const WalletTransactions = () => {
             }
           />
         )}
-        {(wallet.allowSend() || (wallet.type === WatchOnlyWallet.type && wallet.isHd())) && (
+        {(wallet.allowSend() || (wallet.getType() === WatchOnlyWallet.type && wallet.isHd())) && (
           <FButton
             onLongPress={sendButtonLongPress}
             onPress={sendButtonPress}
@@ -795,7 +793,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-around'
   },
   listHeaderTextRow: {
     flex: 1,

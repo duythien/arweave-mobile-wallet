@@ -36,46 +36,11 @@ export default class WalletGradient {
 
   static gradientsFor(type) {
     let gradient;
-    console.log('type----->' + type);
+    console.log('WalletGradient.js')
 
     switch (type) {
       case WatchOnlyWallet.type:
         gradient = WalletGradient.watchOnlyWallet;
-        break;
-      case LegacyWallet.type:
-        gradient = WalletGradient.legacyWallet;
-        break;
-      case HDLegacyP2PKHWallet.type:
-      case HDLegacyElectrumSeedP2PKHWallet.type:
-      case SLIP39LegacyP2PKHWallet.type:
-        gradient = WalletGradient.hdLegacyP2PKHWallet;
-        break;
-      case HDLegacyBreadwalletWallet.type:
-        gradient = WalletGradient.hdLegacyBreadWallet;
-        break;
-      case HDSegwitP2SHWallet.type:
-      case SLIP39SegwitP2SHWallet.type:
-        gradient = WalletGradient.hdSegwitP2SHWallet;
-        break;
-      case HDSegwitBech32Wallet.type:
-      case HDSegwitElectrumSeedP2WPKHWallet.type:
-      case SLIP39SegwitBech32Wallet.type:
-        gradient = WalletGradient.hdSegwitBech32Wallet;
-        break;
-      case LightningCustodianWallet.type:
-        gradient = WalletGradient.lightningCustodianWallet;
-        break;
-      case PlaceholderWallet.type:
-        gradient = WalletGradient.watchOnlyWallet;
-        break;
-      case SegwitBech32Wallet.type:
-        gradient = WalletGradient.segwitBech32Wallet;
-        break;
-      case MultisigHDWallet.type:
-        gradient = WalletGradient.multisigHdWallet;
-        break;
-      case HDAezeedWallet.type:
-        gradient = WalletGradient.aezeedWallet;
         break;
       default:
         gradient = WalletGradient.PQDWallet;
@@ -102,43 +67,11 @@ export default class WalletGradient {
   static headerColorFor(type) {
     let gradient;
     switch (type) {
-      case WatchOnlyWallet.type:
-        gradient = WalletGradient.watchOnlyWallet;
-        break;
-      case LegacyWallet.type:
-        gradient = WalletGradient.legacyWallet;
-        break;
-      case HDLegacyP2PKHWallet.type:
-      case HDLegacyElectrumSeedP2PKHWallet.type:
-      case SLIP39LegacyP2PKHWallet.type:
-        gradient = WalletGradient.hdLegacyP2PKHWallet;
-        break;
-      case HDLegacyBreadwalletWallet.type:
-        gradient = WalletGradient.hdLegacyBreadWallet;
-        break;
-      case HDSegwitP2SHWallet.type:
-      case SLIP39SegwitP2SHWallet.type:
-        gradient = WalletGradient.hdSegwitP2SHWallet;
-        break;
-      case HDSegwitBech32Wallet.type:
-      case HDSegwitElectrumSeedP2WPKHWallet.type:
-      case SLIP39SegwitBech32Wallet.type:
-        gradient = WalletGradient.hdSegwitBech32Wallet;
-        break;
-      case SegwitBech32Wallet.type:
-        gradient = WalletGradient.segwitBech32Wallet;
-        break;
-      case MultisigHDWallet.type:
-        gradient = WalletGradient.multisigHdWallet;
-        break;
-      case LightningCustodianWallet.type:
-        gradient = WalletGradient.lightningCustodianWallet;
-        break;
       case HDAezeedWallet.type:
         gradient = WalletGradient.aezeedWallet;
         break;
       default:
-        gradient = WalletGradient.defaultGradients;
+        gradient = WalletGradient.PQDWallet;
         break;
     }
     return gradient[0];

@@ -122,8 +122,6 @@ const WalletsAdd = () => {
       'key': key,
       'address': address
     }
-    
-
     arweave = new ArweaveWallet(w);
     addWallet(arweave);
 

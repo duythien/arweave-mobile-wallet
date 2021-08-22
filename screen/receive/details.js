@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
+import React, { useCallback, useContext, useRef, useState, useEffect } from 'react';
 import {
   InteractionManager,
   Keyboard,
@@ -8,7 +8,7 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
-  View,
+  View
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { useNavigation, useRoute, useTheme, useFocusEffect } from '@react-navigation/native';
@@ -137,6 +137,14 @@ const ReceiveDetails = () => {
     },
   });
 
+  
+  useEffect(() => {
+    (async () => {
+      console.log(address)
+    })();
+  }, []);
+
+
   const handleShareQRCode = () => {
     qrCode.current.toDataURL(data => {
       const shareImageBase64 = {
@@ -178,7 +186,7 @@ const ReceiveDetails = () => {
               />
 
               <QRCode
-                value="Just some string value"
+                value={bip21encoded}
                 logo={require('../../img/qr-code.png')}
                 size={(is.ipad() && 300) || 300}
                 logoSize={90}

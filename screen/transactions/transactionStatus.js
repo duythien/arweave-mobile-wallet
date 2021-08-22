@@ -108,6 +108,7 @@ const TransactionsStatus = () => {
   };
 
   useEffect(() => {
+    console.log('TransactionsStatus.js')
     initialState();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
