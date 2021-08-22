@@ -178,7 +178,7 @@ const ReceiveDetails = () => {
               />
 
               <QRCode
-                value={bip21encoded}
+                value="Just some string value"
                 logo={require('../../img/qr-code.png')}
                 size={(is.ipad() && 300) || 300}
                 logoSize={90}

@@ -258,8 +258,6 @@ const WalletCarouselItem = ({ item, index, onPress, handleLongPress, isSelectedW
       break;
     default:
       image = I18nManager.isRTL ? require('../img/lnd-shape-rtl.png') : require('../img/lnd-shape.png');
-
-      //image = I18nManager.isRTL ? require('../img/btc-shape-rtl.png') : require('../img/btc-shape.png');
   }
 
   return (

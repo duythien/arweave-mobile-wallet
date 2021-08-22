@@ -129,6 +129,7 @@ const WalletTransactions = () => {
     setIsLoading(false);
     setSelectedWallet(wallet.getID());
     setDataSource(wallet.getTransactions(15));
+
     setOptions({
       headerStyle: {
         backgroundColor: WalletGradient.headerColorFor(wallet.type),
@@ -177,14 +178,12 @@ const WalletTransactions = () => {
    * Forcefully fetches TXs and balance for wallet
    */
   const refreshTransactions = async () => {
-    if (await BlueElectrum.isDisabled()) return setIsLoading(false);
     if (isLoading) return;
     setIsLoading(true);
     let noErr = true;
     let smthChanged = false;
     try {
-      // await BlueElectrum.ping();
-      await BlueElectrum.waitTillConnected();
+      
       /** @type {LegacyWallet} */
       const balanceStart = +new Date();
       const oldBalance = wallet.getBalance();
@@ -213,7 +212,7 @@ const WalletTransactions = () => {
     if (noErr && smthChanged) {
       console.log('saving to disk');
       await saveToDisk(); // caching
-      //    setDataSource([...getTransactionsSliced(limit)]);
+      setDataSource([...getTransactionsSliced(limit)]);
     }
     setIsLoading(false);
     setTimeElapsed(prev => prev + 1);
@@ -257,8 +256,6 @@ const WalletTransactions = () => {
 
            */}
           {wallet.getTransactions().length > 0 && wallet.type !== LightningCustodianWallet.type && renderSellFiat()}
-          {wallet.type === LightningCustodianWallet.type && renderMarketplaceButton()}
-          {wallet.type === LightningCustodianWallet.type && Platform.OS === 'ios' && renderLappBrowserButton()}
         </View>
         <View style={[styles.listHeaderTextRow, stylesHook.listHeaderTextRow]}>
           <Text style={[styles.listHeaderText, stylesHook.listHeaderText]}>{loc.transactions.list_title}</Text>
@@ -454,6 +451,7 @@ const WalletTransactions = () => {
   const renderItem = item => <BlueTransactionListItem item={item.item} itemPriceUnit={itemPriceUnit} timeElapsed={timeElapsed} />;
 
   const onBarCodeRead = ret => {
+    console.log('Recevied')
     if (!isLoading) {
       setIsLoading(true);
       const params = {
@@ -605,14 +603,7 @@ const WalletTransactions = () => {
 
   return (
     <View style={styles.flex}>
-      <StatusBar barStyle="light-content" backgroundColor={WalletGradient.headerColorFor(wallet.type)} />
-      {wallet.chain === Chain.ONCHAIN && wallet.type !== MultisigHDWallet.type && (
-        <HandoffComponent
-          title={`Bitcoin Wallet ${wallet.getLabel()}`}
-          type="io.bluewallet.bluewallet"
-          url={`https://blockpath.com/search/addr?q=${wallet.getXpub()}`}
-        />
-      )}
+      
       <BlueWalletNavigationHeader
         wallet={wallet}
         onWalletUnitChange={passedWallet =>
@@ -622,6 +613,7 @@ const WalletTransactions = () => {
           })
         }
         onManageFundsPressed={() => {
+          console.log('onManageFundsPressed')
           if (wallet.type === MultisigHDWallet.type) {
             navigateToViewEditCosigners();
           } else if (wallet.type === LightningCustodianWallet.type) {

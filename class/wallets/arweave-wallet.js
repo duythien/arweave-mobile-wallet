@@ -43,7 +43,7 @@ export class ArweaveWallet {
     } catch (e) {
       console.log(e)
     }
-    return null;
+    return 'Never';
   }
   getAddress() {
     return this.props.address;
@@ -74,13 +74,13 @@ export class ArweaveWallet {
     return 'getLatestTransactionTime'
   }
   getTransactions() {
-    return 'getTransactions'
+    return []
   }
   timeToRefreshBalance() {
     return 'timeToRefreshBalance';
   }
   allowSend(){
-    return 'allowSend'
+    return true
   }
   allowReceive() {
     return 'allowReceive';
@@ -105,5 +105,11 @@ export class ArweaveWallet {
   }
   allowSignVerifyMessage() {
     return 'allowSignVerifyMessage()'
+  }
+  getUserHasSavedExport() {
+    return
+  }
+  setUserHasSavedExport(v){
+    this.setUserHasSavedExport = v
   }
 }
