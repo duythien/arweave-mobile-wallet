@@ -363,7 +363,7 @@ const ReceiveDetails = () => {
   };
 
   const handleShareButtonPressed = () => {
-    Share.open({ message: bip21encoded }).catch(error => console.log(error));
+    Share.open({ message: address }).catch(error => console.log(error));
   };
 
   /**
