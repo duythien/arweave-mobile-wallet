@@ -61,6 +61,22 @@ router.post('/arweave/balance', function(req, res, next) {
  
 });
 
+router.post('/arweave/create_transaction', function(req, res, next) {
+  try{
+    let transaction = arweave.createTransaction({
+      target: req.body.address,
+      quantity: arweave.ar.arToWinston(req.body.amount)
+    }, req.body.key);
+    
+    res.send({'data' : transaction});
+
+  }catch(e) {
+    next(e);
+    res.send({'error': '404'});
+  }
+ 
+});
+
 
 
 

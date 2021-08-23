@@ -116,4 +116,20 @@ export class ArweaveWallet {
   getType() {
     return this.props.type;
   }
+  allowCosignPsbt() {
+    return false;
+  }
+  /**
+   * Fetches UTXO from API. Returns VOID.
+   *
+   * @return {Promise.<void>}
+   */
+  async fetchUtxo() {
+    try {
+      return 
+      
+    } catch (Error) {
+      console.warn(Error);
+    }
+  }
 }

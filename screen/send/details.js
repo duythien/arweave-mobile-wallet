@@ -38,7 +38,6 @@ import BottomModal from '../../components/BottomModal';
 import AddressInput from '../../components/AddressInput';
 import AmountInput from '../../components/AmountInput';
 import InputAccessoryAllFunds from '../../components/InputAccessoryAllFunds';
-import { AbstractHDElectrumWallet } from '../../class/wallets/abstract-hd-electrum-wallet';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
 const currency = require('../../blue_modules/currency');
 const prompt = require('../../blue_modules/prompt');
@@ -113,17 +112,11 @@ const SendDetails = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    // check if we have a suitable wallet
-    const suitable = wallets.filter(wallet => wallet.chain === Chain.ONCHAIN && wallet.allowSend());
-    if (suitable.length === 0) {
-      Alert.alert(loc.errors.error, loc.send.details_wallet_before_tx);
-      navigation.goBack();
-      return;
-    }
-    const wallet = (routeParams.walletID && wallets.find(w => w.getID() === routeParams.walletID)) || suitable[0];
+    
+    const wallet = (routeParams.walletID && wallets.find(w => w.getID() === routeParams.walletID));
     setWallet(wallet);
-    setFeeUnit(wallet.getPreferredBalanceUnit());
-    setAmountUnit(wallet.preferredBalanceUnit); // default for whole screen
+    //setFeeUnit(wallet.getPreferredBalanceUnit());
+    //setAmountUnit(); // default for whole screen
 
     // decode route params
     if (routeParams.uri) {
@@ -177,12 +170,12 @@ const SendDetails = () => {
   useEffect(() => {
     if (!wallet) return;
     setSelectedWallet(wallet.getID());
-    navigation.setParams({
-      advancedOptionsMenuButtonAction: () => {
-        Keyboard.dismiss();
-        setOptionsVisible(true);
-      },
-    });
+    // navigation.setParams({
+    //   advancedOptionsMenuButtonAction: () => {
+    //     Keyboard.dismiss();
+    //     setOptionsVisible(true);
+    //   },
+    // });
 
     // reset other values
     setUtxo(null);
@@ -200,78 +193,78 @@ const SendDetails = () => {
   }, [wallet]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // recalc fees in effect so we don't block render
-  useEffect(() => {
-    if (!wallet) return; // wait for it
-    const fees = networkTransactionFees;
-    const changeAddress = getChangeAddressFast();
-    const requestedSatPerByte = Number(feeRate);
-    const lutxo = utxo || wallet.getUtxo();
+  // useEffect(() => {
+  //   if (!wallet) return; // wait for it
+  //   const fees = networkTransactionFees;
+  //   const changeAddress = getChangeAddressFast();
+  //   const requestedSatPerByte = Number(feeRate);
+  //   const lutxo = utxo || wallet.getUtxo();
 
-    const options = [
-      { key: 'current', fee: requestedSatPerByte },
-      { key: 'slowFee', fee: fees.slowFee },
-      { key: 'mediumFee', fee: fees.mediumFee },
-      { key: 'fastestFee', fee: fees.fastestFee },
-    ];
+  //   const options = [
+  //     { key: 'current', fee: requestedSatPerByte },
+  //     { key: 'slowFee', fee: fees.slowFee },
+  //     { key: 'mediumFee', fee: fees.mediumFee },
+  //     { key: 'fastestFee', fee: fees.fastestFee },
+  //   ];
 
-    const newFeePrecalc = { ...feePrecalc };
+  //   const newFeePrecalc = { ...feePrecalc };
 
-    for (const opt of options) {
-      let targets = [];
-      for (const transaction of addresses) {
-        if (transaction.amount === BitcoinUnit.MAX) {
-          // single output with MAX
-          targets = [{ address: transaction.address }];
-          break;
-        }
-        const value = parseInt(transaction.amountSats);
-        if (value > 0) {
-          targets.push({ address: transaction.address, value });
-        } else if (transaction.amount) {
-          if (currency.btcToSatoshi(transaction.amount) > 0) {
-            targets.push({ address: transaction.address, value: currency.btcToSatoshi(transaction.amount) });
-          }
-        }
-      }
+  //   for (const opt of options) {
+  //     let targets = [];
+  //     for (const transaction of addresses) {
+  //       if (transaction.amount === BitcoinUnit.MAX) {
+  //         // single output with MAX
+  //         targets = [{ address: transaction.address }];
+  //         break;
+  //       }
+  //       const value = parseInt(transaction.amountSats);
+  //       if (value > 0) {
+  //         targets.push({ address: transaction.address, value });
+  //       } else if (transaction.amount) {
+  //         if (currency.btcToSatoshi(transaction.amount) > 0) {
+  //           targets.push({ address: transaction.address, value: currency.btcToSatoshi(transaction.amount) });
+  //         }
+  //       }
+  //     }
 
-      // if targets is empty, insert dust
-      if (targets.length === 0) {
-        targets.push({ address: '36JxaUrpDzkEerkTf1FzwHNE1Hb7cCjgJV', value: 546 });
-      }
+  //     // if targets is empty, insert dust
+  //     if (targets.length === 0) {
+  //       targets.push({ address: '36JxaUrpDzkEerkTf1FzwHNE1Hb7cCjgJV', value: 546 });
+  //     }
 
-      // replace wrong addresses with dump
-      targets = targets.map(t => {
-        try {
-          bitcoin.address.toOutputScript(t.address);
-          return t;
-        } catch (e) {
-          return { ...t, address: '36JxaUrpDzkEerkTf1FzwHNE1Hb7cCjgJV' };
-        }
-      });
+  //     // replace wrong addresses with dump
+  //     targets = targets.map(t => {
+  //       try {
+  //         bitcoin.address.toOutputScript(t.address);
+  //         return t;
+  //       } catch (e) {
+  //         return { ...t, address: '36JxaUrpDzkEerkTf1FzwHNE1Hb7cCjgJV' };
+  //       }
+  //     });
 
-      let flag = false;
-      while (true) {
-        try {
-          const { fee } = wallet.coinselect(lutxo, targets, opt.fee, changeAddress);
+  //     let flag = false;
+  //     while (true) {
+  //       try {
+  //         const { fee } = wallet.coinselect(lutxo, targets, opt.fee, changeAddress);
 
-          newFeePrecalc[opt.key] = fee;
-          break;
-        } catch (e) {
-          if (e.message.includes('Not enough') && !flag) {
-            flag = true;
-            // if we don't have enough funds, construct maximum possible transaction
-            targets = targets.map((t, index) => (index > 0 ? { ...t, value: 546 } : { address: t.address }));
-            continue;
-          }
+  //         newFeePrecalc[opt.key] = fee;
+  //         break;
+  //       } catch (e) {
+  //         if (e.message.includes('Not enough') && !flag) {
+  //           flag = true;
+  //           // if we don't have enough funds, construct maximum possible transaction
+  //           targets = targets.map((t, index) => (index > 0 ? { ...t, value: 546 } : { address: t.address }));
+  //           continue;
+  //         }
 
-          newFeePrecalc[opt.key] = null;
-          break;
-        }
-      }
-    }
+  //         newFeePrecalc[opt.key] = null;
+  //         break;
+  //       }
+  //     }
+  //   }
 
-    setFeePrecalc(newFeePrecalc);
-  }, [wallet, networkTransactionFees, utxo, addresses, feeRate, dumb]); // eslint-disable-line react-hooks/exhaustive-deps
+  //   setFeePrecalc(newFeePrecalc);
+  // }, [wallet, networkTransactionFees, utxo, addresses, feeRate, dumb]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getChangeAddressFast = () => {
     if (changeAddress) return changeAddress; // cache
@@ -280,9 +273,8 @@ const SendDetails = () => {
     if (WatchOnlyWallet.type === wallet.type && !wallet.isHd()) {
       // plain watchonly - just get the address
       change = wallet.getAddress();
-    } else if (WatchOnlyWallet.type === wallet.type || wallet instanceof AbstractHDElectrumWallet) {
-      change = wallet._getInternalAddressByIndex(wallet.getNextFreeChangeAddressIndex());
-    } else {
+    } 
+    else {
       // legacy wallets
       change = wallet.getAddress();
     }
@@ -303,15 +295,6 @@ const SendDetails = () => {
         change = await Promise.race([sleep(2000), wallet.getChangeAddressAsync()]);
       } catch (_) {}
 
-      if (!change) {
-        // either sleep expired or getChangeAddressAsync threw an exception
-        if (wallet instanceof AbstractHDElectrumWallet) {
-          change = wallet._getInternalAddressByIndex(wallet.getNextFreeChangeAddressIndex());
-        } else {
-          // legacy wallets
-          change = wallet.getAddress();
-        }
-      }
     }
 
     if (change) setChangeAddress(change); // cache
@@ -1130,6 +1113,7 @@ const SendDetails = () => {
   };
 
   const renderBitcoinTransactionInfoFields = params => {
+    console.log('renderBitcoinTransactionInfoFields')
     const { item, index } = params;
     return (
       <View style={{ width }} testID={'Transaction' + index}>
