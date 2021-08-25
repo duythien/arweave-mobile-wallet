@@ -16,8 +16,16 @@ export class ArweaveWallet {
     return this.balanceHuman = b;
   }
 
-  getBalance(){
-    
+  async getBalance(){
+    try {
+      const result = await getBalance(this.getAddress());
+      if (result) {
+        return result;
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    return 0;
   }
 
   async getBalanceHuman() {

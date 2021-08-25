@@ -75,6 +75,8 @@ const SendDetails = () => {
   const [payjoinUrl, setPayjoinUrl] = useState(null);
   const [changeAddress, setChangeAddress] = useState();
   const [dumb, setDumb] = useState(false);
+  const [balance, setBalance] = useState('');
+
   // if cutomFee is not set, we need to choose highest possible fee for wallet balance
   // if there are no funds for even Slow option, use 1 sat/byte fee
   const feeRate = useMemo(() => {
@@ -115,6 +117,8 @@ const SendDetails = () => {
     
     const wallet = (routeParams.walletID && wallets.find(w => w.getID() === routeParams.walletID));
     setWallet(wallet);
+
+
     //setFeeUnit(wallet.getPreferredBalanceUnit());
     //setAmountUnit(); // default for whole screen
 
@@ -166,31 +170,26 @@ const SendDetails = () => {
       });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // change header and reset state on wallet change
+
   useEffect(() => {
-    if (!wallet) return;
-    setSelectedWallet(wallet.getID());
-    // navigation.setParams({
-    //   advancedOptionsMenuButtonAction: () => {
-    //     Keyboard.dismiss();
-    //     setOptionsVisible(true);
-    //   },
-    // });
+    (async () => {
+      if (wallet) {
+        try {
+          const result = await wallet.getBalance();
+          if (result) {
+            setBalance(result)
+          }
+          console.log(balance)
 
-    // reset other values
-    setUtxo(null);
-    setChangeAddress(null);
-    setIsTransactionReplaceable(wallet.type === HDSegwitBech32Wallet.type);
+        } catch (e) {
+          console.log(e)
+        }
+      }      
+      
+    })();
+  });
 
-    // update wallet UTXO
-    wallet
-      .fetchUtxo()
-      .then(() => {
-        // we need to re-calculate fees
-        setDumb(v => !v);
-      })
-      .catch(e => console.log('fetchUtxo error', e));
-  }, [wallet]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   // recalc fees in effect so we don't block render
   // useEffect(() => {
@@ -368,60 +367,16 @@ const SendDetails = () => {
   const createTransaction = async () => {
     Keyboard.dismiss();
     setIsLoading(true);
-    const requestedSatPerByte = feeRate;
-    for (const [index, transaction] of addresses.entries()) {
-      let error;
-      if (!transaction.amount || transaction.amount < 0 || parseFloat(transaction.amount) === 0) {
-        error = loc.send.details_amount_field_is_not_valid;
-        console.log('validation error');
-      } else if (parseFloat(transaction.amountSats) <= 500) {
-        error = loc.send.details_amount_field_is_less_than_minimum_amount_sat;
-        console.log('validation error');
-      } else if (!requestedSatPerByte || parseFloat(requestedSatPerByte) < 1) {
-        error = loc.send.details_fee_field_is_not_valid;
-        console.log('validation error');
-      } else if (!transaction.address) {
-        error = loc.send.details_address_field_is_not_valid;
-        console.log('validation error');
-      } else if (balance - transaction.amountSats < 0) {
-        // first sanity check is that sending amount is not bigger than available balance
-        error = loc.send.details_total_exceeds_balance;
-        console.log('validation error');
-      } else if (transaction.address) {
-        const address = transaction.address.trim().toLowerCase();
-        if (address.startsWith('lnb') || address.startsWith('lightning:lnb')) {
-          error =
-            'This address appears to be for a Lightning invoice. Please, go to your Lightning wallet in order to make a payment for this invoice.';
-          console.log('validation error');
-        }
-      }
 
-      if (!error) {
-        try {
-          bitcoin.address.toOutputScript(transaction.address);
-        } catch (err) {
-          console.log('validation error');
-          console.log(err);
-          error = loc.send.details_address_field_is_not_valid;
-        }
-      }
-
-      if (error) {
-        scrollView.current.scrollToIndex({ index });
-        setIsLoading(false);
-        Alert.alert(loc.errors.error, error);
-        ReactNativeHapticFeedback.trigger('notificationError', { ignoreAndroidSystemSettings: false });
-        return;
-      }
-    }
-
-    try {
-      await createPsbtTransaction();
-    } catch (Err) {
-      setIsLoading(false);
-      Alert.alert(loc.errors.error, Err.message);
-      ReactNativeHapticFeedback.trigger('notificationError', { ignoreAndroidSystemSettings: false });
-    }
+    alert('createTransaction')
+    
+    // try {
+    //   await createPsbtTransaction();
+    // } catch (Err) {
+    //   setIsLoading(false);
+    //   Alert.alert(loc.errors.error, Err.message);
+    //   ReactNativeHapticFeedback.trigger('notificationError', { ignoreAndroidSystemSettings: false });
+    // }
   };
 
   const createPsbtTransaction = async () => {
@@ -1203,10 +1158,7 @@ const SendDetails = () => {
     );
   }
 
-  // if utxo is limited we use it to calculate available balance
-  const balance = utxo ? utxo.reduce((prev, curr) => prev + curr.value, 0) : wallet.getBalance();
-  const allBalance = formatBalanceWithoutSuffix(balance, BitcoinUnit.BTC, true);
-
+  const allBalance = balance
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={[styles.root, stylesHook.root]} onLayout={e => setWidth(e.nativeEvent.layout.width)}>
