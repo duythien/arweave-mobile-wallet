@@ -571,10 +571,11 @@
     "tip": "This feature allows you to see, label, freeze or select coins for improved wallet management. You can select multiple coins by tapping on the colored circles."
   },
   "units": {
-    "BTC": "BTC",
+    "BTC": "AR",
     "MAX": "Max",
     "sat_byte": "sat/byte",
-    "sats": "sats"
+    "sats": "sats",
+    "winston": "winston"
   },
   "addresses": {
     "sign_title": "Sign/Verify message",

@@ -1113,6 +1113,7 @@ const SendDetails = () => {
   };
 
   const renderBitcoinTransactionInfoFields = params => {
+    console.log(params)
     console.log('renderBitcoinTransactionInfoFields')
     const { item, index } = params;
     return (
@@ -1255,7 +1256,7 @@ const SendDetails = () => {
               ) : (
                 <View style={[styles.feeRow, stylesHook.feeRow]}>
                   <Text style={stylesHook.feeValue}>
-                    {feePrecalc.current ? formatFee(feePrecalc.current) : feeRate + ' ' + loc.units.sat_byte}
+                    {feePrecalc.current ? formatFee(feePrecalc.current) : '1525392.0' + ' ' + loc.units.winston}
                   </Text>
                 </View>
               )}

@@ -111,6 +111,8 @@ export default class SendCreate extends Component {
   }
 
   _renderItem = ({ index, item }) => {
+    console.log('create.js')
+    console.log(item);
     return (
       <>
         <View>

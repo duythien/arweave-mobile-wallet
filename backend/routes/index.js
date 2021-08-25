@@ -67,6 +67,8 @@ router.post('/arweave/create_transaction', function(req, res, next) {
       target: req.body.address,
       quantity: arweave.ar.arToWinston(req.body.amount)
     }, req.body.key);
+    console.log('succeed');
+    console.log(transaction)
     
     res.send({'data' : transaction});
 
