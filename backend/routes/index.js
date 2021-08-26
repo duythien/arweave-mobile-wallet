@@ -69,7 +69,7 @@ router.post('/arweave/create_transaction', function(req, res, next) {
     }, req.body.key);
     console.log('succeed');
     console.log(transaction)
-    
+
     res.send({'data' : transaction});
 
   }catch(e) {
@@ -79,6 +79,32 @@ router.post('/arweave/create_transaction', function(req, res, next) {
  
 });
 
+router.post('/arweave/status_transaction', function(req, res, next) {
+  try{
+    arweave.transactions.getStatus(req.body.address).then((data) => {
+      res.send({'data' : data});
+    });
+
+  }catch(e) {
+    next(e);
+    res.send({'error': '404'});
+  }
+ 
+});
+
+router.post('/arweave/transaction', function(req, res, next) {
+  try{
+    arweave.transactions.get(req.body.transaction_id).then((data) => {
+      res.send({'data' : data});
+    });
+  }catch(e) {
+    next(e);
+    console.log(e);
+    res.send(e);
+
+  }
+ 
+});
 
 
 
