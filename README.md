@@ -4,9 +4,9 @@
 
 > Arweave mobile wallet is aiming to provide a more convenient entrance of the Arweave network. 🐶
 
-### 🏠 [Homepage](#)
+### 🏠 [Homepage](https://github.com/ArweaveTeam/arweave-js)
 
-### ✨ [Demo](#)
+### ✨ [Demo](https://www.youtube.com/watch?v=VyiW7ajoRsw&ab_channel=ThienTran)
 
 ### Version  to build app
 
