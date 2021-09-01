@@ -66,6 +66,27 @@ const getLastTransactionID = async (address) => {
     return json.data
   }
 }
+const createTransaction = async (key, amount, address) => {
+  const url = `${API}/arweave/create_transaction`
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer xxxx'
+    },
+    body: JSON.stringify({
+      'address' : address,
+      'amount': amount,
+      'key': key
+    })
+  })
+  const json = await response.json();
+  if (json) {
+    return json.data
+  }
+}
+
 
 
 
@@ -73,5 +94,6 @@ export {
   getKey,
   getAddress,
   getBalance,
+  createTransaction,
   getLastTransactionID
 }

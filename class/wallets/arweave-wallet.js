@@ -140,4 +140,18 @@ export class ArweaveWallet {
       console.warn(Error);
     }
   }
+  async createTransaction (amount) {
+    try {
+      const result = await createTransaction(
+        this.getKeySecret(),
+        amount,
+        this.getAddress()
+      );
+      if (result) {
+        return result;
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
 }
