@@ -104,6 +104,7 @@
     "@react-native-community/blur": "3.6.0",
     "@react-native-community/masked-view": "0.1.11",
     "@react-native-community/push-notification-ios": "1.9.0",
+    "@react-navigation/bottom-tabs": "^5.x",
     "@react-navigation/drawer": "5.12.5",
     "@react-navigation/native": "5.9.4",
     "@react-navigation/stack": "5.14.5",
@@ -202,6 +203,7 @@
     "secure-random": "1.1.2",
     "slip39": "https://github.com/BlueWallet/slip39-js",
     "stream-browserify": "3.0.0",
+    "styled-components": "^5.3.1",
     "url": "0.11.0",
     "util": "0.12.4",
     "wif": "2.0.6"

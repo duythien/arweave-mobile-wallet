@@ -84,6 +84,9 @@ import { isDesktop, isTablet } from './blue_modules/environment';
 import SettingsPrivacy from './screen/settings/SettingsPrivacy';
 import LNDViewAdditionalInvoicePreImage from './screen/lnd/lndViewAdditionalInvoicePreImage';
 
+import MainTabs from './screen/MainTabs'
+
+
 const defaultScreenOptions =
   Platform.OS === 'ios'
     ? ({ route, navigation }) => ({
@@ -110,78 +113,6 @@ const defaultStackScreenOptions =
         cardOverlayEnabled: true,
         ...TransitionPresets.ScaleFromCenterAndroid,
       };
-
-const WalletsStack = createStackNavigator();
-
-const WalletsRoot = () => {
-  const theme = useTheme();
-
-  return (
-    <WalletsStack.Navigator {...(Platform.OS === 'android' ? { screenOptions: defaultScreenOptions } : null)}>
-      <WalletsStack.Screen name="WalletsList" component={WalletsList} options={WalletsList.navigationOptions(theme)} />
-      <WalletsStack.Screen name="WalletTransactions" component={WalletTransactions} options={WalletTransactions.navigationOptions(theme)} />
-      <WalletsStack.Screen name="WalletDetails" component={WalletDetails} options={WalletDetails.navigationOptions(theme)} />
-      <WalletsStack.Screen name="TransactionDetails" component={TransactionDetails} options={TransactionDetails.navigationOptions(theme)} />
-      <WalletsStack.Screen name="TransactionStatus" component={TransactionStatus} options={TransactionStatus.navigationOptions(theme)} />
-      <WalletsStack.Screen name="HodlHodl" component={HodlHodl} options={HodlHodl.navigationOptions(theme)} />
-      <WalletsStack.Screen name="HodlHodlViewOffer" component={HodlHodlViewOffer} options={HodlHodlViewOffer.navigationOptions(theme)} />
-      <WalletsStack.Screen name="CPFP" component={CPFP} options={CPFP.navigationOptions(theme)} />
-      <WalletsStack.Screen name="RBFBumpFee" component={RBFBumpFee} options={RBFBumpFee.navigationOptions(theme)} />
-      <WalletsStack.Screen name="RBFCancel" component={RBFCancel} options={RBFCancel.navigationOptions(theme)} />
-      <WalletsStack.Screen name="Settings" component={Settings} options={Settings.navigationOptions(theme)} />
-      <WalletsStack.Screen name="SelectWallet" component={SelectWallet} options={SelectWallet.navigationOptions(theme)} />
-      <WalletsStack.Screen name="Currency" component={Currency} options={Currency.navigationOptions(theme)} />
-      <WalletsStack.Screen name="About" component={About} options={About.navigationOptions(theme)} />
-      <WalletsStack.Screen name="ReleaseNotes" component={ReleaseNotes} options={ReleaseNotes.navigationOptions(theme)} />
-      <WalletsStack.Screen name="Selftest" component={Selftest} options={Selftest.navigationOptions(theme)} />
-      <WalletsStack.Screen name="Licensing" component={Licensing} options={Licensing.navigationOptions(theme)} />
-      <WalletsStack.Screen name="DefaultView" component={DefaultView} options={DefaultView.navigationOptions(theme)} />
-      <WalletsStack.Screen name="Language" component={Language} options={Language.navigationOptions(theme)} />
-      <WalletsStack.Screen name="EncryptStorage" component={EncryptStorage} options={EncryptStorage.navigationOptions(theme)} />
-      <WalletsStack.Screen name="GeneralSettings" component={GeneralSettings} options={GeneralSettings.navigationOptions(theme)} />
-      <WalletsStack.Screen name="NetworkSettings" component={NetworkSettings} options={NetworkSettings.navigationOptions(theme)} />
-      <WalletsStack.Screen
-        name="NotificationSettings"
-        component={NotificationSettings}
-        options={NotificationSettings.navigationOptions(theme)}
-      />
-      <WalletsStack.Screen
-        name="PlausibleDeniability"
-        component={PlausibleDeniability}
-        options={PlausibleDeniability.navigationOptions(theme)}
-      />
-      <WalletsStack.Screen name="LightningSettings" component={LightningSettings} options={LightningSettings.navigationOptions(theme)} />
-      <WalletsStack.Screen name="ElectrumSettings" component={ElectrumSettings} options={ElectrumSettings.navigationOptions(theme)} />
-      <WalletsStack.Screen name="TorSettings" component={TorSettings} options={TorSettings.navigationOptions(theme)} />
-      <WalletsStack.Screen name="SettingsPrivacy" component={SettingsPrivacy} options={SettingsPrivacy.navigationOptions(theme)} />
-      <WalletsStack.Screen name="Tools" component={Tools} options={Tools.navigationOptions(theme)} />
-      <WalletsStack.Screen name="LNDViewInvoice" component={LNDViewInvoice} options={LNDViewInvoice.navigationOptions(theme)} />
-      <WalletsStack.Screen
-        name="LNDViewAdditionalInvoiceInformation"
-        component={LNDViewAdditionalInvoiceInformation}
-        options={LNDViewAdditionalInvoiceInformation.navigationOptions(theme)}
-      />
-      <WalletsStack.Screen
-        name="LNDViewAdditionalInvoicePreImage"
-        component={LNDViewAdditionalInvoicePreImage}
-        options={LNDViewAdditionalInvoicePreImage.navigationOptions(theme)}
-      />
-      <WalletsStack.Screen name="Broadcast" component={Broadcast} options={Broadcast.navigationOptions(theme)} />
-      <WalletsStack.Screen name="IsItMyAddress" component={IsItMyAddress} options={IsItMyAddress.navigationOptions(theme)} />
-      <WalletsStack.Screen name="LnurlPay" component={LnurlPay} options={LnurlPay.navigationOptions(theme)} />
-      <WalletsStack.Screen name="LnurlPaySuccess" component={LnurlPaySuccess} options={LnurlPaySuccess.navigationOptions(theme)} />
-      <WalletsStack.Screen
-        name="Success"
-        component={Success}
-        options={{
-          headerShown: false,
-          gestureEnabled: false,
-        }}
-      />
-      <WalletsStack.Screen name="WalletAddresses" component={WalletAddresses} options={WalletAddresses.navigationOptions(theme)} />
-    </WalletsStack.Navigator>
-  );
-};
 
 const AddWalletStack = createStackNavigator();
 const AddWalletRoot = () => {
@@ -357,7 +288,7 @@ function DrawerRoot() {
       drawerContent={props => (isLargeScreen ? <DrawerList {...props} /> : null)}
       drawerPosition={I18nManager.isRTL ? 'right' : 'left'}
     >
-      <Drawer.Screen name="Navigation" component={Navigation} options={{ headerShown: false, gestureEnabled: false }} />
+    <Drawer.Screen name="Navigation" component={Navigation} options={{ headerShown: false, gestureEnabled: false }} />
     </Drawer.Navigator>
   );
 }
@@ -416,6 +347,7 @@ const LappBrowserStackRoot = () => {
     </LappBrowserStack.Navigator>
   );
 };
+
 
 const InitStack = createStackNavigator();
 const InitRoot = () => (
@@ -488,7 +420,8 @@ const Navigation = () => {
   return (
     <RootStack.Navigator mode="modal" screenOptions={defaultScreenOptions} initialRouteName="UnlockWithScreenRoot">
       {/* stacks */}
-      <RootStack.Screen name="WalletsRoot" component={WalletsRoot} options={{ headerShown: false }} />
+      <RootStack.Screen name="MainTabs" component={MainTabs} />
+
       <RootStack.Screen name="AddWalletRoot" component={AddWalletRoot} options={{ headerShown: false }} />
       <RootStack.Screen name="SendDetailsRoot" component={SendDetailsRoot} options={{ headerShown: false }} />
       <RootStack.Screen name="LNDCreateInvoiceRoot" component={LNDCreateInvoiceRoot} options={{ headerShown: false }} />
@@ -523,6 +456,7 @@ const Navigation = () => {
           headerShown: false,
         }}
       />
+
     </RootStack.Navigator>
   );
 };

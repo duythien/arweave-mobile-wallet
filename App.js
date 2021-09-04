@@ -37,6 +37,8 @@ import WalletImport from './class/wallet-import';
 import Biometric from './class/biometrics';
 import WidgetCommunication from './blue_modules/WidgetCommunication';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
+
+
 const A = require('./blue_modules/analytics');
 
 const eventEmitter = new NativeEventEmitter(NativeModules.EventEmitter);
@@ -177,7 +179,7 @@ const App = () => {
         key: `WalletTransactions-${wallet.getID()}`,
         params: {
           walletID: wallet.getID(),
-          walletType: wallet.type,
+          walletType: wallet.getType(),
         },
       }),
     );
@@ -225,7 +227,7 @@ const App = () => {
               key: `WalletTransactions-${wallet.getID()}`,
               params: {
                 walletID,
-                walletType: wallet.type,
+                walletType: wallet.getType(),
               },
             }),
           );
@@ -334,8 +336,6 @@ const App = () => {
         <StatusBar barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
         <NavigationContainer ref={navigationRef} theme={colorScheme === 'dark' ? BlueDarkTheme : BlueDefaultTheme}>
           <InitRoot />
-          <Notifications onProcessNotifications={processPushNotifications} />
-          {renderClipboardContentModal()}
         </NavigationContainer>
         {walletsInitialized && !isDesktop && <WatchConnectivity />}
       </View>
