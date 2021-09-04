@@ -16,32 +16,33 @@ const MainTabs = () => {
     <Tab.Navigator 
 
        	screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+          	tabBarIcon: ({ focused, color, size }) => {
+	            let iconName;
 
-            if (route.name === 'Home') {
-              iconName = 'home';
-            } 
+	            if (route.name === 'Home') {
+	              iconName = 'home';
+	            } 
 
-            if (route.name === 'Dapp') {
-              iconName = 'md-logo-firefox';
-            }
-            if (route.name === 'Staking') {
-              iconName = 'file-tray-stacked';
-            }
-            if (route.name === 'Apps') {
-              iconName = 'apps-outline';
-            }
-            size = 30;
+	            if (route.name === 'Dapp') {
+	              iconName = 'md-logo-firefox';
+	            }
+	            if (route.name === 'Staking') {
+	              iconName = 'file-tray-stacked';
+	            }
+	            if (route.name === 'Apps') {
+	              iconName = 'apps-outline';
+	            }
+	            size = 30;
 
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
+	            // You can return any component that you like here!
+	            return <Ionicons name={iconName} size={size} color={color} />;
+	          },
+        })} 
         tabBarOptions={{
           activeTintColor: '#080808',
           inactiveTintColor: '#909090',
         }}
+
     >
     	<Tab.Screen component={WalletScreen} name="Home" options={{ headerShown: false }} />
       	<Tab.Screen component={DappScreen} name="Dapp" options={{ headerShown: false }} />

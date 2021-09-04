@@ -420,7 +420,7 @@ const Navigation = () => {
   return (
     <RootStack.Navigator mode="modal" screenOptions={defaultScreenOptions} initialRouteName="UnlockWithScreenRoot">
       {/* stacks */}
-      <RootStack.Screen name="MainTabs" component={MainTabs} />
+      <RootStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }}/>
 
       <RootStack.Screen name="AddWalletRoot" component={AddWalletRoot} options={{ headerShown: false }} />
       <RootStack.Screen name="SendDetailsRoot" component={SendDetailsRoot} options={{ headerShown: false }} />
