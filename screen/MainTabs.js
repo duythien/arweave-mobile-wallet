@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
+import DappScreen from './mainNative/DappScreen';
 import WalletScreen from './mainNative/WalletScreen';
 
 
@@ -43,7 +44,7 @@ const MainTabs = () => {
         }}
     >
     	<Tab.Screen component={WalletScreen} name="Home" options={{ headerShown: false }} />
-      	<Tab.Screen component={WalletScreen} name="Dapp" options={{ headerShown: false }} />
+      	<Tab.Screen component={DappScreen} name="Dapp" options={{ headerShown: false }} />
       	<Tab.Screen component={WalletScreen} name="Apps" options={{ headerShown: false }} />
     	<Tab.Screen component={WalletScreen} name="Staking" options={{ headerShown: false }} />
     </Tab.Navigator>
