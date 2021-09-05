@@ -6,8 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import DappScreen from './mainNative/DappScreen';
-import WalletScreen from './mainNative/WalletScreen';
+
 import HomeStack from './mainNative//home/HomeStack';
 import AppStack from './mainNative//app/AppStack';
 import DappStack from './mainNative//dapp/DappStack';

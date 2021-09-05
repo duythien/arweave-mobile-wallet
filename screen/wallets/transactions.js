@@ -38,6 +38,7 @@ import { BlueStorageContext } from '../../blue_modules/storage-context';
 import { isDesktop, isMacCatalina } from '../../blue_modules/environment';
 import BlueClipboard from '../../blue_modules/clipboard';
 
+
 const fs = require('../../blue_modules/fs');
 const LocalQRCode = require('@remobile/react-native-qrcode-local-image');
 
@@ -46,7 +47,7 @@ const buttonFontSize =
     ? 22
     : PixelRatio.roundToNearestPixel(Dimensions.get('window').width / 26);
 
-const WalletTransactions = () => {
+const WalletTransactions = ({navigation}) => {
   const { wallets, saveToDisk, setSelectedWallet, walletTransactionUpdateStatus } = useContext(BlueStorageContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isManageFundsModalVisible, setIsManageFundsModalVisible] = useState(false);
@@ -487,7 +488,7 @@ const WalletTransactions = () => {
   };
 
   const sendButtonPress = () => {
-    navigate('SendDetailsRoot', {
+    navigate('HomeTabs', {
       screen: 'SendDetails',
       params: {
         walletID: wallet.getID(),
@@ -660,11 +661,7 @@ const WalletTransactions = () => {
             testID="ReceiveButton"
             text={loc.receive.header}
             onPress={() => {
-              if (wallet.chain === Chain.OFFCHAIN) {
-                navigate('LNDCreateInvoiceRoot', { screen: 'LNDCreateInvoice', params: { walletID: wallet.getID() } });
-              } else {
-                navigate('ReceiveDetailsRoot', { screen: 'ReceiveDetails', params: { walletID: wallet.getID(), address: wallet.getAddress()} });
-              }
+              navigate('HomeTabs', { screen: 'ReceiveDetails', params: { walletID: wallet.getID(), address: wallet.getAddress()} });
             }}
             icon={
               <View style={styles.receiveIcon}>
