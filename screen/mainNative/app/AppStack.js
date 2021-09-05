@@ -49,7 +49,7 @@ const HomeTabs = () => {
 
 const Stack = createStackNavigator()
 
-export default function HomeStack() {
+export default function AppStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }}/>

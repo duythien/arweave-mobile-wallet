@@ -9,6 +9,9 @@ import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-na
 import DappScreen from './mainNative/DappScreen';
 import WalletScreen from './mainNative/WalletScreen';
 import HomeStack from './mainNative//home/HomeStack';
+import AppStack from './mainNative//app/AppStack';
+import DappStack from './mainNative//dapp/DappStack';
+import StakingStack from './mainNative/staking/StakingStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -46,9 +49,9 @@ const MainTabs = () => {
 
     >
     	<Tab.Screen component={HomeStack} name="Home" options={{ headerShown: false }} />
-      <Tab.Screen component={DappScreen} name="Dapp" options={{ headerShown: false }} />
-      <Tab.Screen component={WalletScreen} name="Apps" options={{ headerShown: false }} />
-    	<Tab.Screen component={WalletScreen} name="Staking" options={{ headerShown: false }} />
+      <Tab.Screen component={DappStack} name="Dapp" options={{ headerShown: false }} />
+      <Tab.Screen component={AppStack}  name="Apps" options={{ headerShown: false }} />
+    	<Tab.Screen component={StakingStack} name="Staking" options={{ headerShown: false }} />
     </Tab.Navigator>
   )
 }
