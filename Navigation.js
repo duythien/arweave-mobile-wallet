@@ -349,18 +349,7 @@ const LappBrowserStackRoot = () => {
 };
 
 
-const InitStack = createStackNavigator();
-const InitRoot = () => (
-  <InitStack.Navigator screenOptions={defaultScreenOptions} initialRouteName="UnlockWithScreenRoot">
-    <InitStack.Screen
-      name="UnlockWithScreenRoot"
-      component={UnlockWithScreenRoot}
-      options={{ headerShown: false, animationEnabled: false }}
-    />
-    <InitStack.Screen name="ReorderWallets" component={ReorderWalletsStackRoot} options={{ headerShown: false, gestureEnabled: false }} />
-    <InitStack.Screen name="DrawerRoot" component={DrawerRoot} options={{ headerShown: false, animationEnabled: false }} />
-  </InitStack.Navigator>
-);
+
 
 const ViewEditMultisigCosignersStack = createStackNavigator();
 const ViewEditMultisigCosignersRoot = () => {
@@ -420,7 +409,6 @@ const Navigation = () => {
   return (
     <RootStack.Navigator mode="modal" screenOptions={defaultScreenOptions} initialRouteName="UnlockWithScreenRoot">
       {/* stacks */}
-      <RootStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }}/>
 
       <RootStack.Screen name="AddWalletRoot" component={AddWalletRoot} options={{ headerShown: false }} />
       <RootStack.Screen name="SendDetailsRoot" component={SendDetailsRoot} options={{ headerShown: false }} />
@@ -460,5 +448,15 @@ const Navigation = () => {
     </RootStack.Navigator>
   );
 };
+
+const InitStack = createStackNavigator();
+const InitRoot = () => (
+  <InitStack.Navigator>
+    
+    <InitStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }}/>
+    <InitStack.Screen name="ReorderWallets" component={ReorderWalletsStackRoot} options={{ headerShown: false, gestureEnabled: false }} />
+    <InitStack.Screen name="DrawerRoot" component={DrawerRoot} options={{ headerShown: false, animationEnabled: false }} />
+  </InitStack.Navigator>
+);
 
 export default InitRoot;

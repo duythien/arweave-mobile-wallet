@@ -7,18 +7,18 @@ import { useTheme } from '@react-navigation/native';
 import Settings from '../settings/settings';
 import About from '../settings/about';
 import ReleaseNotes from '../settings/releasenotes';
-import WalletsList from '..//wallets/list';
-
-
+import WalletsList from '../wallets/list';
+import WalletTransactions from '../wallets/transactions';
 
 const WalletScreen = () => {
   const theme = useTheme();
-  const WalletsStack = createStackNavigator();
+  const Stack = createStackNavigator();
 
   return (
-    <WalletsStack.Navigator {...(Platform.OS === 'android' ? { screenOptions: defaultScreenOptions } : null)}>
-      <WalletsStack.Screen name="WalletsList" component={WalletsList} options={WalletsList.navigationOptions(theme)} />
-    </WalletsStack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="WalletsList" component={WalletsList} options={WalletsList.navigationOptions(theme)} />
+      <Stack.Screen name="WalletTransactions" component={WalletTransactions}  />
+    </Stack.Navigator>
   );
 };
 

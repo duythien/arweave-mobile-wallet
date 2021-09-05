@@ -257,9 +257,10 @@ const WalletsList = () => {
   };
 
   const renderSectionItem = item => {
+    console.log('item.section.key', item.section.key)
     switch (item.section.key) {
       case WalletsListSections.CAROUSEL:
-        return isLargeScreen ? null : renderWalletsCarousel();
+        return renderWalletsCarousel();
       case WalletsListSections.LOCALTRADER:
         return renderLocalTrader();
       case WalletsListSections.TRANSACTIONS:
@@ -305,12 +306,6 @@ const WalletsList = () => {
     return `${item}${index}}`;
   };
 
-  
-
-  
-
-  
-
   const onLayout = _e => {
     setIsLargeScreen(Platform.OS === 'android' ? isTablet() : width >= Dimensions.get('screen').width / 2 && (isTablet() || isDesktop));
   };
@@ -345,7 +340,7 @@ const WalletsList = () => {
 };
 
 export default WalletsList;
-WalletsList.navigationOptions = navigationStyle({}, opts => ({ ...opts, title: '' }));
+//WalletsList.navigationOptions = navigationStyle({}, opts => ({ ...opts, title: '' }));
 
 const styles = StyleSheet.create({
   root: {

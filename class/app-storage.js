@@ -316,8 +316,10 @@ export class AppStorage {
    * @returns {Promise.<boolean>}
    */
   async loadFromDisk(password) {
-    this.resetData();
+    //this.resetData();
     let data = await this.getItem('data');
+
+    console.log('loadFromDisk', data)
   
     if (data !== null) {
       data = JSON.parse(data);
