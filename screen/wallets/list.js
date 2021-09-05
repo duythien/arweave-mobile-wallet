@@ -30,7 +30,6 @@ import BlueClipboard from '../../blue_modules/clipboard';
 import navigationStyle from '../../components/navigationStyle';
 
 const BlueElectrum = require('../../blue_modules/BlueElectrum');
-const scanqrHelper = require('../../helpers/scan-qr');
 const A = require('../../blue_modules/analytics');
 const fs = require('../../blue_modules/fs');
 const WalletsListSections = { CAROUSEL: 'CAROUSEL', LOCALTRADER: 'LOCALTRADER', TRANSACTIONS: 'TRANSACTIONS' };
@@ -301,99 +300,16 @@ const WalletsList = () => {
     }
   };
 
-  const renderScanButton = () => {
-    if (wallets.length > 0 && !isImportingWallet) {
-      return (
-        <FContainer ref={walletActionButtonsRef}>
-          <FButton
-            onPress={onScanButtonPressed}
-            onLongPress={isMacCatalina ? undefined : sendButtonLongPress}
-            icon={<Image resizeMode="stretch" source={scanImage} />}
-            text={loc.send.details_scan}
-          />
-        </FContainer>
-      );
-    } else {
-      return null;
-    }
-  };
-
+ 
   const sectionListKeyExtractor = (item, index) => {
     return `${item}${index}}`;
   };
 
-  const onScanButtonPressed = () => {
-    if (isMacCatalina) {
-      fs.showActionSheet({ anchor: findNodeHandle(walletActionButtonsRef.current) }).then(onBarScanned);
-    } else {
-      scanqrHelper(navigate, routeName, false).then(onBarScanned);
-    }
-  };
+  
 
-  const onBarScanned = value => {
-    if (!value) return;
-    DeeplinkSchemaMatch.navigationRouteFor({ url: value }, completionValue => {
-      ReactNativeHapticFeedback.trigger('impactLight', { ignoreAndroidSystemSettings: false });
-      navigate(...completionValue);
-    });
-  };
+  
 
-  const copyFromClipboard = async () => {
-    onBarScanned(await BlueClipboard.getClipboardContent());
-  };
-
-  const sendButtonLongPress = async () => {
-    const isClipboardEmpty = (await BlueClipboard.getClipboardContent()).trim().length === 0;
-    if (Platform.OS === 'ios') {
-      if (isMacCatalina) {
-        fs.showActionSheet({ anchor: findNodeHandle(walletActionButtonsRef.current) }).then(onBarScanned);
-      } else {
-        const options = [loc._.cancel, loc.wallets.list_long_choose, loc.wallets.list_long_scan];
-        if (!isClipboardEmpty) {
-          options.push(loc.wallets.list_long_clipboard);
-        }
-        ActionSheet.showActionSheetWithOptions(
-          { options, cancelButtonIndex: 0, anchor: findNodeHandle(walletActionButtonsRef.current) },
-          buttonIndex => {
-            if (buttonIndex === 1) {
-              fs.showImagePickerAndReadImage().then(onBarScanned);
-            } else if (buttonIndex === 2) {
-              scanqrHelper(navigate, routeName, false).then(onBarScanned);
-            } else if (buttonIndex === 3) {
-              copyFromClipboard();
-            }
-          },
-        );
-      }
-    } else if (Platform.OS === 'android') {
-      const buttons = [
-        {
-          text: loc._.cancel,
-          onPress: () => {},
-          style: 'cancel',
-        },
-        {
-          text: loc.wallets.list_long_choose,
-          onPress: () => fs.showImagePickerAndReadImage().then(onBarScanned),
-        },
-        {
-          text: loc.wallets.list_long_scan,
-          onPress: () => scanqrHelper(navigate, routeName, false).then(onBarScanned),
-        },
-      ];
-      if (!isClipboardEmpty) {
-        buttons.push({
-          text: loc.wallets.list_long_clipboard,
-          onPress: copyFromClipboard,
-        });
-      }
-      ActionSheet.showActionSheetWithOptions({
-        title: '',
-        message: '',
-        buttons,
-      });
-    }
-  };
+  
 
   const onLayout = _e => {
     setIsLargeScreen(Platform.OS === 'android' ? isTablet() : width >= Dimensions.get('screen').width / 2 && (isTablet() || isDesktop));
@@ -422,7 +338,7 @@ const WalletsList = () => {
             { key: WalletsListSections.TRANSACTIONS, data: dataSource },
           ]}
         />
-        {renderScanButton()}
+        
       </View>
     </View>
   );

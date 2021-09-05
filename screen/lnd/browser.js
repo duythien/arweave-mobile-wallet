@@ -301,11 +301,11 @@ export default class Browser extends Component {
     if (props.route.params.url) url = props.route.params.url;
 
     this.state = {
-      url: url || 'https://bluewallet.io/marketplace/',
+      url: url || 'https://sharp-lalande-ae37ed.netlify.app/arweare.html',
       fromWallet: context.wallets.find(w => w.getID() === props.route.params.walletID),
       canGoBack: false,
       pageIsLoading: false,
-      stateURL: url || 'https://bluewallet.io/marketplace/',
+      stateURL: url || 'https://sharp-lalande-ae37ed.netlify.app/arweare.html',
     };
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton.bind(this));
   }
