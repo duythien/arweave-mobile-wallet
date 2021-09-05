@@ -62,7 +62,7 @@ const UnlockWith = () => {
 
   const successfullyAuthenticated = () => {
     setWalletsInitialized(true);
-    dispatch(StackActions.replace('DrawerRoot'));
+    dispatch(StackActions.replace('MainTabs'));
   };
 
   const unlockWithBiometrics = async () => {

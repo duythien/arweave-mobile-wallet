@@ -451,11 +451,11 @@ const Navigation = () => {
 
 const InitStack = createStackNavigator();
 const InitRoot = () => (
-  <InitStack.Navigator>
-    
-    <InitStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }}/>
+  <InitStack.Navigator screenOptions={defaultScreenOptions} initialRouteName="UnlockWithScreenRoot">
+    <InitStack.Screen name="UnlockWithScreenRoot" component={UnlockWithScreenRoot} options={{ headerShown: false, animationEnabled: false }}/>
+    <InitStack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false, animationEnabled: false }}/>
     <InitStack.Screen name="ReorderWallets" component={ReorderWalletsStackRoot} options={{ headerShown: false, gestureEnabled: false }} />
-    <InitStack.Screen name="DrawerRoot" component={DrawerRoot} options={{ headerShown: false, animationEnabled: false }} />
+    <InitStack.Screen name="SettingTabs" component={Settings} options={{ headerShown: false, gestureEnabled: false }}  />
   </InitStack.Navigator>
 );
 

@@ -336,6 +336,8 @@ const App = () => {
         <StatusBar barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
         <NavigationContainer ref={navigationRef} theme={colorScheme === 'dark' ? BlueDarkTheme : BlueDefaultTheme}>
           <InitRoot />
+          <Notifications onProcessNotifications={processPushNotifications} />
+          {renderClipboardContentModal()}
         </NavigationContainer>
         {walletsInitialized && !isDesktop && <WatchConnectivity />}
       </View>
