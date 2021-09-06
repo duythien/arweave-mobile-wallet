@@ -370,7 +370,15 @@ const SendDetails = () => {
     Keyboard.dismiss();
     setIsLoading(true);
 
-    alert('createTransaction')
+    //alert('createTransaction');
+
+    navigation.navigate('SendConfirm', {
+      fee: 1,
+      memo,
+      walletID: wallet.getID(),
+      tx: 'xxxxx'
+    });
+    setIsLoading(false);
     
     // try {
     //   await createPsbtTransaction();

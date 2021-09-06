@@ -340,7 +340,7 @@ const WalletsList = () => {
 };
 
 export default WalletsList;
-//WalletsList.navigationOptions = navigationStyle({}, opts => ({ ...opts, title: '' }));
+WalletsList.navigationOptions = navigationStyle({}, opts => ({ ...opts, title: '' }));
 
 const styles = StyleSheet.create({
   root: {

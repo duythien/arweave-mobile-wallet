@@ -12,6 +12,10 @@ import WalletExport from '../../wallets/export';
 import PleaseBackup from '../../wallets/pleaseBackup';
 import PleaseBackupQrcode from '../../wallets/pleaseBackupQrcode';
 import SendDetails from './send/details';
+import SendConfirm from './send/confirm';
+import SendSuccess from './send/success';
+
+
 import ReceiveDetails from './receive/details';
 
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
@@ -25,11 +29,12 @@ const HomeStack = ({navigation, route}) => {
   
 
   useEffect(() => {
-    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
-    if ('SendDetails' == routeName) {
-      navigation.setOptions({ tabBarVisible: false })
-    } else {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'WalletsList';
+    
+    if ('WalletsList' == routeName) {
       navigation.setOptions({ tabBarVisible: true })
+    } else {
+      navigation.setOptions({ tabBarVisible: false })
     }
     //return () => { mountedRef.current = false }
   }, [navigation, route])
@@ -45,7 +50,8 @@ const HomeStack = ({navigation, route}) => {
       />   
       <Stack.Screen name="WalletTransactions" component={WalletTransactions}  />
       <Stack.Screen name="SendDetails" component={SendDetails} />
-
+      <Stack.Screen name="SendConfirm" component={SendConfirm} />
+      <Stack.Screen name="SendSuccess" component={SendSuccess} />
       <Stack.Screen name="ReceiveDetails" component={ReceiveDetails} options={ReceiveDetails.navigationOptions(theme)} />
     </Stack.Navigator>
   )

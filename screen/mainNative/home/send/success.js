@@ -11,7 +11,7 @@ import { BlueButton, BlueCard } from '../../BlueComponents';
 import { BitcoinUnit } from '../../models/bitcoinUnits';
 import loc from '../../loc';
 
-const Success = () => {
+const SendSuccess = ({navigation}) => {
   const pop = () => {
     dangerouslyGetParent().pop();
   };
@@ -35,6 +35,12 @@ const Success = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const goHome = () => {
+    console.log('popToTop')
+    navigation.popToTop()
+
+  }
+
   return (
     <SafeAreaView style={[styles.root, stylesHook.root]}>
       <SuccessView
@@ -45,13 +51,13 @@ const Success = () => {
         onDonePressed={onDonePressed}
       />
       <View style={styles.buttonContainer}>
-        <BlueButton onPress={onDonePressed} title={loc.send.success_done} />
+        <BlueButton onPress={goHome} title={loc.send.success_done} />
       </View>
     </SafeAreaView>
   );
 };
 
-export default Success;
+export default SendSuccess;
 
 export const SuccessView = ({ amount, amountUnit, fee, invoiceDescription, shouldAnimate = true }) => {
   const animationRef = useRef();
