@@ -134,10 +134,10 @@ const WalletTransactions = ({navigation}) => {
       headerStyle: {
         backgroundColor: WalletGradient.headerColorFor(wallet.getType()),
         borderBottomWidth: 0,
-        elevation: 0,
-        // shadowRadius: 0,
-        shadowOffset: { height: 0, width: 0 },
+        shadowColor: 'transparent'
       },
+        
+       headerTintColor: '#fff',
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallets, wallet, walletID]);
@@ -689,36 +689,6 @@ const WalletTransactions = ({navigation}) => {
 };
 
 export default WalletTransactions;
-
-WalletTransactions.navigationOptions = navigationStyle({}, (options, { theme, navigation, route }) => {
-  return {
-    headerRight: () => (
-      <TouchableOpacity
-        accessibilityRole="button"
-        testID="WalletDetails"
-        disabled={route.params.isLoading === true}
-        style={styles.walletDetails}
-        onPress={() =>
-          navigation.navigate('WalletDetails', {
-            walletID: route.params.walletID,
-          })
-        }
-      >
-        <Icon name="kebab-horizontal" type="octicon" size={22} color="#FFFFFF" />
-      </TouchableOpacity>
-    ),
-    title: '',
-    headerStyle: {
-      backgroundColor: WalletGradient.headerColorFor(route.params.walletType),
-      borderBottomWidth: 0,
-      elevation: 0,
-      // shadowRadius: 0,
-      shadowOffset: { height: 0, width: 0 },
-    },
-    headerTintColor: '#FFFFFF',
-    headerBackTitleVisible: false,
-  };
-});
 
 const styles = StyleSheet.create({
   flex: {
