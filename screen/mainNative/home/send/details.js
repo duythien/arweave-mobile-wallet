@@ -114,7 +114,6 @@ const SendDetails = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    
     const wallet = (routeParams.walletID && wallets.find(w => w.getID() === routeParams.walletID));
     setWallet(wallet);
 
@@ -170,8 +169,9 @@ const SendDetails = () => {
       });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-
+  const mountedRef = useRef(true)
   useEffect(() => {
+    // CALL YOUR API OR ASYNC FUNCTION HERE
     (async () => {
       if (wallet) {
         try {
@@ -184,10 +184,12 @@ const SendDetails = () => {
         } catch (e) {
           console.log(e)
         }
-      }      
-      
-    })();
-  });
+      }
+    });
+
+    return () => { mountedRef.current = false }
+  }, [])
+  
 
 
 
@@ -1068,7 +1070,6 @@ const SendDetails = () => {
   };
 
   const renderBitcoinTransactionInfoFields = params => {
-    console.log(params)
     console.log('renderBitcoinTransactionInfoFields')
     const { item, index } = params;
     return (

@@ -17,12 +17,22 @@ const list = [
   {
     name: 'File 01',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
+    subtitle: 'Crust'
+  },
+  {
+    name: 'Image 01',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Polkadot'
   },
   {
     name: 'File 02',
+    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+    subtitle: 'Bitcoin'
+  },
+  {
+    name: 'Image 02',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Chairman'
+    subtitle: 'Phu Quoc Dog'
   },
   {
     name: 'File 03',

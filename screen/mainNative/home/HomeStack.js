@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 
 import { createStackNavigator } from '@react-navigation/stack'
 import { useTheme } from '@react-navigation/native';
@@ -14,48 +14,41 @@ import PleaseBackupQrcode from '../../wallets/pleaseBackupQrcode';
 import SendDetails from './send/details';
 import ReceiveDetails from './receive/details';
 
-const AddWalletStack = createStackNavigator();
-const AddWalletRoot = () => {
-  const theme = useTheme();
-  return (
-    <AddWalletStack.Navigator>
-      <AddWalletStack.Screen name="AddWallet" component={AddWallet} options={ImportWallet.navigationOptions(theme)} />
-      <AddWalletStack.Screen name="ImportWallet" component={ImportWallet} options={ImportWallet.navigationOptions(theme)} />
-      <AddWalletStack.Screen name="PleaseBackup" component={PleaseBackup} options={PleaseBackup.navigationOptions(theme)} />
-      <AddWalletStack.Screen
-        name="PleaseBackupQrcode"
-        component={PleaseBackupQrcode}
-        options={PleaseBackupQrcode.navigationOptions(theme)}
-      />      
-    </AddWalletStack.Navigator>
-  );
-};
-
-
-
-const Tab = createStackNavigator()
-
-const HomeTabs = () => {
-  const theme = useTheme();
-
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="WalletsList" component={WalletsList}  />
-      <Tab.Screen name="AddWalletRoot" component={AddWalletRoot} options={{ headerShown: false }} />
-      <Tab.Screen name="WalletTransactions" component={WalletTransactions}  />
-      <Tab.Screen name="SendDetails" component={SendDetails} options={SendDetails.navigationOptions(theme)} />
-      <Tab.Screen name="ReceiveDetails" component={ReceiveDetails} options={ReceiveDetails.navigationOptions(theme)} />
-    </Tab.Navigator>
-  )
-}
-
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Stack = createStackNavigator()
 
-export default function HomeStack() {
+
+
+const HomeStack = ({navigation, route}) => {
+  const theme = useTheme();
+  
+
+  useEffect(() => {
+    const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+    if ('SendDetails' == routeName) {
+      navigation.setOptions({ tabBarVisible: false })
+    } else {
+      navigation.setOptions({ tabBarVisible: true })
+    }
+    //return () => { mountedRef.current = false }
+  }, [navigation, route])
+
   return (
     <Stack.Navigator>
-      <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }}/>
+      <Stack.Screen name="WalletsList" component={WalletsList}  />
+      <Stack.Screen name="AddWalletRoot" component={AddWallet} options={ImportWallet.navigationOptions(theme)} />
+      <Stack.Screen name="ImportWallet" component={ImportWallet} options={ImportWallet.navigationOptions(theme)} />
+      <Stack.Screen name="PleaseBackup" component={PleaseBackup} options={PleaseBackup.navigationOptions(theme)} />
+      <Stack.Screen name="PleaseBackupQrcode" component={PleaseBackupQrcode}
+        options={PleaseBackupQrcode.navigationOptions(theme)}
+      />   
+      <Stack.Screen name="WalletTransactions" component={WalletTransactions}  />
+      <Stack.Screen name="SendDetails" component={SendDetails} />
+
+      <Stack.Screen name="ReceiveDetails" component={ReceiveDetails} options={ReceiveDetails.navigationOptions(theme)} />
     </Stack.Navigator>
   )
 }
+
+export default HomeStack;

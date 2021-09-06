@@ -488,7 +488,7 @@ const WalletTransactions = ({navigation}) => {
   };
 
   const sendButtonPress = () => {
-    navigate('HomeTabs', {
+    navigate('Home', {
       screen: 'SendDetails',
       params: {
         walletID: wallet.getID(),
@@ -661,7 +661,7 @@ const WalletTransactions = ({navigation}) => {
             testID="ReceiveButton"
             text={loc.receive.header}
             onPress={() => {
-              navigate('HomeTabs', { screen: 'ReceiveDetails', params: { walletID: wallet.getID(), address: wallet.getAddress()} });
+              navigate('Home', { screen: 'ReceiveDetails', params: { walletID: wallet.getID(), address: wallet.getAddress()} });
             }}
             icon={
               <View style={styles.receiveIcon}>
