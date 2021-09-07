@@ -64,6 +64,8 @@ const SendConfirm = () => {
   });
 
   useEffect(() => {
+    console.log('params', params)
+
     console.log('send/confirm - useEffect');
     console.log('address = ', recipients);
     Biometric.isBiometricUseCapableAndEnabled().then(setIsBiometricUseCapableAndEnabled);
@@ -86,7 +88,7 @@ const SendConfirm = () => {
       
 
       //amount = formatBalanceWithoutSuffix(amount, BitcoinUnit.BTC, false);
-      amount = '10';
+      amount = params.amount;
       navigate('SendSuccess', {
         fee: Number(fee),
         amount,
