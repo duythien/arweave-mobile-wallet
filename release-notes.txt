@@ -1,0 +1,8 @@
+* Move send and receive to maintabs 
+* Change StackActions to MainTabs 
+* Add stack tab 
+* refactor tabs 
+* Remove scan qr home page 
+* Hide headerShown 
+* Add dapp screen 
+* Add nav tab 

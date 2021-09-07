@@ -77,21 +77,14 @@ const SendDetails = () => {
   const [dumb, setDumb] = useState(false);
   const [balance, setBalance] = useState('');
 
+  const [amount, setAmount] = useState('0');
+
+
   // if cutomFee is not set, we need to choose highest possible fee for wallet balance
   // if there are no funds for even Slow option, use 1 sat/byte fee
   const feeRate = useMemo(() => {
-    if (customFee) return customFee;
-    if (feePrecalc.slowFee === null) return '1'; // wait for precalculated fees
-    let initialFee;
-    if (feePrecalc.fastestFee !== null) {
-      initialFee = String(networkTransactionFees.fastestFee);
-    } else if (feePrecalc.mediumFee !== null) {
-      initialFee = String(networkTransactionFees.mediumFee);
-    } else {
-      initialFee = String(networkTransactionFees.slowFee);
-    }
-    return initialFee;
-  }, [customFee, feePrecalc, networkTransactionFees]);
+    return '0.000001494576'
+  }, []);
 
   // keyboad effects
   useEffect(() => {
@@ -114,64 +107,16 @@ const SendDetails = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    
     const wallet = (routeParams.walletID && wallets.find(w => w.getID() === routeParams.walletID));
     setWallet(wallet);
-
-
-    //setFeeUnit(wallet.getPreferredBalanceUnit());
-    //setAmountUnit(); // default for whole screen
-
-    // decode route params
-    if (routeParams.uri) {
-      try {
-        const { address, amount, memo: initialMemo, payjoinUrl } = DeeplinkSchemaMatch.decodeBitcoinUri(routeParams.uri);
-        setAddresses([{ address, amount, amountSats: currency.btcToSatoshi(amount), key: String(Math.random()) }]);
-        setMemo(initialMemo || '');
-        setAmountUnit(BitcoinUnit.BTC);
-        setPayjoinUrl(payjoinUrl);
-      } catch (error) {
-        console.log(error);
-        Alert.alert(loc.errors.error, loc.send.details_error_decode);
-      }
-    } else if (routeParams.address) {
-      setAddresses([{ address: routeParams.address, key: String(Math.random()) }]);
-      setMemo(routeParams.memo || '');
-      setAmountUnit(BitcoinUnit.BTC);
-    } else {
-      setAddresses([{ address: '', key: String(Math.random()) }]); // key is for the FlatList
-    }
-
+    setAddresses([{ address: '', key: String(Math.random()) }]); // key is for the FlatList
     // we are ready!
-    setIsLoading(false);
-
-    // load cached fees
-    AsyncStorage.getItem(NetworkTransactionFee.StorageKey)
-      .then(res => {
-        const fees = JSON.parse(res);
-        if (!fees?.fastestFee) return;
-        setNetworkTransactionFees(fees);
-      })
-      .catch(e => console.log('loading cached recommendedFees error', e));
-
-    // load fresh fees from servers
-
-    setNetworkTransactionFeesIsLoading(true);
-    NetworkTransactionFees.recommendedFees()
-      .then(async fees => {
-        if (!fees?.fastestFee) return;
-        setNetworkTransactionFees(fees);
-        await AsyncStorage.setItem(NetworkTransactionFee.StorageKey, JSON.stringify(fees));
-      })
-      .catch(e => console.log('loading recommendedFees error', e))
-      .finally(() => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setNetworkTransactionFeesIsLoading(false);
-      });
+    setIsLoading(false);    
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-
+  const mountedRef = useRef(true)
   useEffect(() => {
+    // CALL YOUR API OR ASYNC FUNCTION HERE
     (async () => {
       if (wallet) {
         try {
@@ -184,87 +129,12 @@ const SendDetails = () => {
         } catch (e) {
           console.log(e)
         }
-      }      
-      
-    })();
-  });
+      }
+    });
 
-
-
-  // recalc fees in effect so we don't block render
-  // useEffect(() => {
-  //   if (!wallet) return; // wait for it
-  //   const fees = networkTransactionFees;
-  //   const changeAddress = getChangeAddressFast();
-  //   const requestedSatPerByte = Number(feeRate);
-  //   const lutxo = utxo || wallet.getUtxo();
-
-  //   const options = [
-  //     { key: 'current', fee: requestedSatPerByte },
-  //     { key: 'slowFee', fee: fees.slowFee },
-  //     { key: 'mediumFee', fee: fees.mediumFee },
-  //     { key: 'fastestFee', fee: fees.fastestFee },
-  //   ];
-
-  //   const newFeePrecalc = { ...feePrecalc };
-
-  //   for (const opt of options) {
-  //     let targets = [];
-  //     for (const transaction of addresses) {
-  //       if (transaction.amount === BitcoinUnit.MAX) {
-  //         // single output with MAX
-  //         targets = [{ address: transaction.address }];
-  //         break;
-  //       }
-  //       const value = parseInt(transaction.amountSats);
-  //       if (value > 0) {
-  //         targets.push({ address: transaction.address, value });
-  //       } else if (transaction.amount) {
-  //         if (currency.btcToSatoshi(transaction.amount) > 0) {
-  //           targets.push({ address: transaction.address, value: currency.btcToSatoshi(transaction.amount) });
-  //         }
-  //       }
-  //     }
-
-  //     // if targets is empty, insert dust
-  //     if (targets.length === 0) {
-  //       targets.push({ address: '36JxaUrpDzkEerkTf1FzwHNE1Hb7cCjgJV', value: 546 });
-  //     }
-
-  //     // replace wrong addresses with dump
-  //     targets = targets.map(t => {
-  //       try {
-  //         bitcoin.address.toOutputScript(t.address);
-  //         return t;
-  //       } catch (e) {
-  //         return { ...t, address: '36JxaUrpDzkEerkTf1FzwHNE1Hb7cCjgJV' };
-  //       }
-  //     });
-
-  //     let flag = false;
-  //     while (true) {
-  //       try {
-  //         const { fee } = wallet.coinselect(lutxo, targets, opt.fee, changeAddress);
-
-  //         newFeePrecalc[opt.key] = fee;
-  //         break;
-  //       } catch (e) {
-  //         if (e.message.includes('Not enough') && !flag) {
-  //           flag = true;
-  //           // if we don't have enough funds, construct maximum possible transaction
-  //           targets = targets.map((t, index) => (index > 0 ? { ...t, value: 546 } : { address: t.address }));
-  //           continue;
-  //         }
-
-  //         newFeePrecalc[opt.key] = null;
-  //         break;
-  //       }
-  //     }
-  //   }
-
-  //   setFeePrecalc(newFeePrecalc);
-  // }, [wallet, networkTransactionFees, utxo, addresses, feeRate, dumb]); // eslint-disable-line react-hooks/exhaustive-deps
-
+    return () => { mountedRef.current = false }
+  }, [])
+  
   const getChangeAddressFast = () => {
     if (changeAddress) return changeAddress; // cache
 
@@ -368,7 +238,15 @@ const SendDetails = () => {
     Keyboard.dismiss();
     setIsLoading(true);
 
-    alert('createTransaction')
+    //alert('createTransaction');
+
+    navigation.navigate('SendConfirm', {
+      fee:feeRate,
+      memo,
+      amount,
+      walletID: wallet.getID()
+    });
+    setIsLoading(false);
     
     // try {
     //   await createPsbtTransaction();
@@ -1068,57 +946,25 @@ const SendDetails = () => {
   };
 
   const renderBitcoinTransactionInfoFields = params => {
-    console.log(params)
     console.log('renderBitcoinTransactionInfoFields')
     const { item, index } = params;
+
     return (
       <View style={{ width }} testID={'Transaction' + index}>
         <AmountInput
           isLoading={isLoading}
           amount={item.amount ? item.amount.toString() : null}
           onAmountUnitChange={unit => {
-            setAddresses(addresses => {
-              const item = addresses[index];
-
-              switch (unit) {
-                case BitcoinUnit.SATS:
-                  item.amountSats = parseInt(item.amount);
-                  break;
-                case BitcoinUnit.BTC:
-                  item.amountSats = currency.btcToSatoshi(item.amount);
-                  break;
-                case BitcoinUnit.LOCAL_CURRENCY:
-                  // also accounting for cached fiat->sat conversion to avoid rounding error
-                  item.amountSats = AmountInput.getCachedSatoshis(item.amount) || currency.btcToSatoshi(currency.fiatToBTC(item.amount));
-                  break;
-              }
-
-              addresses[index] = item;
-              return [...addresses];
-            });
-            setUnits(units => {
-              units[index] = unit;
-              return [...units];
-            });
+            
           }}
           onChangeText={text => {
             setAddresses(addresses => {
               item.amount = text;
-              switch (units[index] || amountUnit) {
-                case BitcoinUnit.BTC:
-                  item.amountSats = currency.btcToSatoshi(item.amount);
-                  break;
-                case BitcoinUnit.LOCAL_CURRENCY:
-                  item.amountSats = currency.btcToSatoshi(currency.fiatToBTC(item.amount));
-                  break;
-                case BitcoinUnit.SATS:
-                default:
-                  item.amountSats = parseInt(text);
-                  break;
-              }
+              item.amountSats = parseInt(text);
               addresses[index] = item;
               return [...addresses];
             });
+            setAmount(text)
           }}
           unit={units[index] || amountUnit}
           inputAccessoryViewID={InputAccessoryAllFunds.InputAccessoryViewID}

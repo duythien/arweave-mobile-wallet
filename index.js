@@ -13,7 +13,7 @@ if (!Error.captureStackTrace) {
   Error.captureStackTrace = () => {};
 }
 
-const BlueAppComponent = () => {
+const ArAppComponent = () => {
   // useEffect(() => {
   //   A(A.ENUM.INIT);
   // }, []);
@@ -25,4 +25,4 @@ const BlueAppComponent = () => {
   );
 };
 
-AppRegistry.registerComponent('arweaveWallet', () => BlueAppComponent);
+AppRegistry.registerComponent('arweaveWallet', () => ArAppComponent);

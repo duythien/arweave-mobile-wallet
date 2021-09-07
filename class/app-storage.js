@@ -317,8 +317,7 @@ export class AppStorage {
    */
   async loadFromDisk(password) {
     //this.resetData();
-    let data = await this.getItem('data');
-  
+    let data = await this.getItem('data');  
     if (data !== null) {
       data = JSON.parse(data);
       if (!data.wallets) return false;

@@ -23,7 +23,7 @@ const Bignumber = require('bignumber.js');
 const bitcoin = require('bitcoinjs-lib');
 const torrific = require('../../blue_modules/torrific');
 
-const Confirm = () => {
+const SendConfirm = () => {
   const { wallets, fetchAndSaveWalletTransactions } = useContext(BlueStorageContext);
   const [isBiometricUseCapableAndEnabled, setIsBiometricUseCapableAndEnabled] = useState(false);
   const { params } = useRoute();
@@ -31,7 +31,6 @@ const Confirm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPayjoinEnabled, setIsPayjoinEnabled] = useState(false);
   const wallet = wallets.find(wallet => wallet.getID() === walletID);
-  const payjoinUrl = wallet.allowPayJoin() ? params.payjoinUrl : false;
   const feeSatoshi = new Bignumber(fee).multipliedBy(100000000).toNumber();
   const { navigate } = useNavigation();
   const { colors } = useTheme();
@@ -65,6 +64,8 @@ const Confirm = () => {
   });
 
   useEffect(() => {
+    console.log('params', params)
+
     console.log('send/confirm - useEffect');
     console.log('address = ', recipients);
     Biometric.isBiometricUseCapableAndEnabled().then(setIsBiometricUseCapableAndEnabled);
@@ -84,62 +85,11 @@ const Confirm = () => {
   const send = async () => {
     setIsLoading(true);
     try {
-      const txids2watch = [];
-      if (!isPayjoinEnabled) {
-        await broadcast(tx);
-      } else {
-        const payJoinWallet = new PayjoinTransaction(psbt, txHex => broadcast(txHex), wallet);
-        const paymentScript = getPaymentScript();
-        let payjoinClient;
-        if (isTorCapable && payjoinUrl.includes('.onion')) {
-          console.warn('trying TOR....');
-          // working through TOR - crafting custom requester that will handle TOR http request
-          const customPayjoinRequester = {
-            requestPayjoin: async function (psbt) {
-              console.warn('requesting payjoin with psbt:', psbt.toBase64());
-              const api = new torrific.Torsbee();
-              const torResponse = await api.post(payjoinUrl, {
-                headers: {
-                  'Content-Type': 'text/plain',
-                },
-                body: psbt.toBase64(),
-              });
-              console.warn('got torResponse.body');
-              if (!torResponse.body) throw new Error('TOR failure, got ' + JSON.stringify(torResponse));
-              return Psbt.fromBase64(torResponse.body);
-            },
-          };
-          payjoinClient = new PayjoinClient({
-            paymentScript,
-            payJoinWallet,
-            payjoinRequester: customPayjoinRequester,
-          });
-        } else {
-          payjoinClient = new PayjoinClient({
-            paymentScript,
-            payJoinWallet,
-            payjoinUrl,
-          });
-        }
-        await payjoinClient.run();
-        const payjoinPsbt = payJoinWallet.getPayjoinPsbt();
-        if (payjoinPsbt) {
-          const tx = payjoinPsbt.extractTransaction();
-          txids2watch.push(tx.getId());
-        }
-      }
+      
 
-      const txid = bitcoin.Transaction.fromHex(tx).getId();
-      txids2watch.push(txid);
-      Notifications.majorTomToGroundControl([], [], txids2watch);
-      let amount = 0;
-      for (const recipient of recipients) {
-        amount += recipient.value;
-      }
-
-      amount = formatBalanceWithoutSuffix(amount, BitcoinUnit.BTC, false);
-
-      navigate('Success', {
+      //amount = formatBalanceWithoutSuffix(amount, BitcoinUnit.BTC, false);
+      amount = params.amount;
+      navigate('SendSuccess', {
         fee: Number(fee),
         amount,
       });
@@ -217,16 +167,6 @@ const Confirm = () => {
           keyExtractor={(_item, index) => `${index}`}
           ItemSeparatorComponent={renderSeparator}
         />
-        {!!payjoinUrl && (
-          <View style={styles.cardContainer}>
-            <BlueCard>
-              <View style={[styles.payjoinWrapper, stylesHook.payjoinWrapper]}>
-                <Text style={styles.payjoinText}>Payjoin</Text>
-                <Switch testID="PayjoinSwitch" value={isPayjoinEnabled} onValueChange={setIsPayjoinEnabled} />
-              </View>
-            </BlueCard>
-          </View>
-        )}
       </View>
       <View style={styles.cardBottom}>
         <BlueCard>
@@ -264,7 +204,7 @@ const Confirm = () => {
   );
 };
 
-export default Confirm;
+export default SendConfirm;
 
 const styles = StyleSheet.create({
   transactionDetailsTitle: {
@@ -359,4 +299,4 @@ const styles = StyleSheet.create({
   },
 });
 
-Confirm.navigationOptions = navigationStyle({}, opts => ({ ...opts, title: loc.send.confirm_header }));
+SendConfirm.navigationOptions = navigationStyle({}, opts => ({ ...opts, title: loc.send.confirm_header }));
