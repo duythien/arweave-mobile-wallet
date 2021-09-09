@@ -14,7 +14,7 @@ const getUserName = async (props, setUsername) => {
 }
 const formatBalance = (balance, unit) => {
 
-	return balance + 'PQD';
+	return balance + 'AR';
 
 }
 

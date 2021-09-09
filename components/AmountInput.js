@@ -6,6 +6,7 @@ import { Image, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedbac
 import { useTheme } from '@react-navigation/native';
 
 import { BitcoinUnit } from '../models/bitcoinUnits';
+import {formatAmountFiat} from '../helpers/arweare'
 import loc, { formatBalanceWithoutSuffix, formatBalancePlain, removeTrailingZeros } from '../loc';
 const currency = require('../blue_modules/currency');
 
@@ -91,7 +92,7 @@ class AmountInput extends Component {
   render() {
     const { colors, disabled, unit } = this.props;
     const amount = this.props.amount || '0';
-    let secondaryDisplayCurrency = amount*54.2;
+    let secondaryDisplayCurrency = formatAmountFiat(amount);
     secondaryDisplayCurrency += '$'
 
 

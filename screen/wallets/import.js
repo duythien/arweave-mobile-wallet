@@ -91,7 +91,7 @@ const WalletsImport = () => {
     await saveToDisk();
     setIsLoading(false);
     setTimeout(() => {
-      navigation.dangerouslyGetParent().pop();
+      navigation.popToTop();
     }, 1000);
 
   }

@@ -61,20 +61,23 @@ router.post('/arweave/balance', function(req, res, next) {
  
 });
 
-router.post('/arweave/create_transaction', function(req, res, next) {
+router.post('/arweave/create_transaction', async function(req, res, next) {
   try{
-    let transaction = arweave.createTransaction({
+    let key = req.body.key;
+
+    let transaction = await arweave.createTransaction({
       target: req.body.address,
       quantity: arweave.ar.arToWinston(req.body.amount)
-    }, req.body.key);
-    console.log('succeed');
+    }, key);
+
+    await arweave.transactions.sign(transaction, key);
     console.log(transaction)
 
     res.send({'data' : transaction});
 
   }catch(e) {
-    next(e);
-    res.send({'error': '404'});
+    return next(e)
+    //res.send({'error': '404'});
   }
  
 });
