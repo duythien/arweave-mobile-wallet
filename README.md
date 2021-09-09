@@ -6,7 +6,7 @@
 
 ### 🏠 [Homepage](https://github.com/ArweaveTeam/arweave-js)
 
-### ✨ [Demo](https://www.youtube.com/watch?v=VyiW7ajoRsw&ab_channel=ThienTran)
+### ✨ [Demo](https://www.youtube.com/watch?v=SsmpNHbzt18&ab_channel=ThienTran)
 
 ### Version  to build app
 
