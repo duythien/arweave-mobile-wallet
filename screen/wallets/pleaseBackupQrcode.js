@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
-import { View, StyleSheet, ScrollView, BackHandler, StatusBar,AppState } from 'react-native';
+import { View, StyleSheet, ScrollView, BackHandler, StatusBar,AppState,ActivityIndicator } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 
 import { BlueButton, BlueCopyTextToClipboard, BlueSpacing20, BlueTextCentered, SafeBlueArea } from '../../BlueComponents';
@@ -19,8 +19,10 @@ const PleaseBackupQrcode = () => {
   const [isShareButtonTapped, setIsShareButtonTapped] = useState(false);
   const { colors } = useTheme();
   const [qrCodeSize, setQRCodeSize] = useState(90);
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleBackButton = useCallback(() => {
-    navigation.dangerouslyGetParent().pop();
+    navigation.popToTop();
     return true;
   }, [navigation]);
   const styles = StyleSheet.create({
@@ -62,33 +64,21 @@ const PleaseBackupQrcode = () => {
         setIsShareButtonTapped(false);
       });
     }, 10);
-
+    setIsLoading(false)
     setTimeout(() => {
-      navigation.dangerouslyGetParent().pop();
+      navigation.popToTop();
     }, 9500);
-    
-
   };
-
-
-  // const pop = useCallback(() => {
-  //   setIsShareButtonTapped(true);
-
-  //   setTimeout(() => {
-  //     fs.writeFileAndExport(wallet.getLabel() + '.json', wallet.getKeySecret()).finally(() => {
-  //       setIsShareButtonTapped(false);
-  //     });
-  //   }, 10);
-
-  //   navigation.dangerouslyGetParent().pop();
-  //   return true;
-  // }, [navigation]);
 
   const onLayout = e => {
     const { height, width } = e.nativeEvent.layout;
     setQRCodeSize(height > width ? width - 40 : e.nativeEvent.layout.width / 1.5);
   };
-  return (
+  return !isLoading ? (
+    <View style={[styles.loading, styles.horizontal]}>
+      <ActivityIndicator />
+    </View>
+    ) : (
     <SafeBlueArea style={styles.root} onLayout={onLayout}>
       <StatusBar barStyle="light-content" />
       <ScrollView centerContent contentContainerStyle={styles.scrollViewContent}>
@@ -114,7 +104,8 @@ const PleaseBackupQrcode = () => {
         <BlueButton onPress={exportJsonFile} title={loc.pleasebackup.ok} />
       </ScrollView>
     </SafeBlueArea>
-  );
+    )
+  ;
 };
 
 PleaseBackupQrcode.navigationOptions = navigationStyle(

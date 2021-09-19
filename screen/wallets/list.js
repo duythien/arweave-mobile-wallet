@@ -34,7 +34,7 @@ const A = require('../../blue_modules/analytics');
 const fs = require('../../blue_modules/fs');
 const WalletsListSections = { CAROUSEL: 'CAROUSEL', LOCALTRADER: 'LOCALTRADER', TRANSACTIONS: 'TRANSACTIONS' };
 
-const WalletsList = () => {
+const WalletsList = ({navigation}) => {
   const walletsCarousel = useRef();
   const currentWalletIndex = useRef(0);
   const colorScheme = useColorScheme();
@@ -135,6 +135,8 @@ const WalletsList = () => {
 
   const navigateToSettings = () => {
     navigate('Settings');
+    //navigation.openDrawer();
+    //navigation.dispatch('SettingTopTabs');
   };
 
   /**

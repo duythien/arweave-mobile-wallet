@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, Button} from 'react'
 
 import { createStackNavigator } from '@react-navigation/stack'
 import { useTheme } from '@react-navigation/native';
@@ -18,6 +18,8 @@ import SendSuccess from './send/success';
 
 import ReceiveDetails from './receive/details';
 
+import SettingStack from '../settings/SettingStack'
+
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Stack = createStackNavigator()
@@ -36,6 +38,8 @@ const HomeStack = ({navigation, route}) => {
     } else {
       navigation.setOptions({ tabBarVisible: false })
     }
+
+    //console.log('routeName', routeName)
     //return () => { mountedRef.current = false }
   }, [navigation, route])
 
@@ -53,6 +57,9 @@ const HomeStack = ({navigation, route}) => {
       <Stack.Screen name="SendConfirm" component={SendConfirm} />
       <Stack.Screen name="SendSuccess" component={SendSuccess} />
       <Stack.Screen name="ReceiveDetails" component={ReceiveDetails} options={ReceiveDetails.navigationOptions(theme)} />
+
+      <Stack.Screen name="Settings" component={SettingStack} />
+
     </Stack.Navigator>
   )
 }

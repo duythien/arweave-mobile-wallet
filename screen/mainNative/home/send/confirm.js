@@ -11,7 +11,8 @@ import { BlueButton, BlueText, SafeBlueArea, BlueCard } from '../../BlueComponen
 import navigationStyle from '../../components/navigationStyle';
 import { BitcoinUnit } from '../../models/bitcoinUnits';
 import Biometric from '../../class/biometrics';
-import loc, { formatBalance, formatBalanceWithoutSuffix } from '../../loc';
+import loc, {formatBalanceWithoutSuffix } from '../../loc';
+import {formatBalance, formatAmountFiat} from '../../helpers/arweare'
 import Notifications from '../../blue_modules/notifications';
 import { BlueStorageContext } from '../../blue_modules/storage-context';
 import { Psbt } from 'bitcoinjs-lib';
@@ -27,11 +28,9 @@ const SendConfirm = () => {
   const { wallets, fetchAndSaveWalletTransactions } = useContext(BlueStorageContext);
   const [isBiometricUseCapableAndEnabled, setIsBiometricUseCapableAndEnabled] = useState(false);
   const { params } = useRoute();
-  const { recipients = [], walletID, fee, memo, tx, satoshiPerByte, psbt } = params;
+  const { recipients = [], walletID, fee, memo, tx} = params;
   const [isLoading, setIsLoading] = useState(false);
-  const [isPayjoinEnabled, setIsPayjoinEnabled] = useState(false);
   const wallet = wallets.find(wallet => wallet.getID() === walletID);
-  const feeSatoshi = new Bignumber(fee).multipliedBy(100000000).toNumber();
   const { navigate } = useNavigation();
   const { colors } = useTheme();
   const stylesHook = StyleSheet.create({
@@ -65,28 +64,17 @@ const SendConfirm = () => {
 
   useEffect(() => {
     console.log('params', params)
-
     console.log('send/confirm - useEffect');
     console.log('address = ', recipients);
     Biometric.isBiometricUseCapableAndEnabled().then(setIsBiometricUseCapableAndEnabled);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /**
-   * we need to look into `recipients`, find destination address and return its outputScript
-   * (needed for payjoin)
-   *
-   * @return {string}
-   */
-  const getPaymentScript = () => {
-    return bitcoin.address.toOutputScript(recipients[0].address);
-  };
-
+ 
   const send = async () => {
     setIsLoading(true);
     try {
       
-
       //amount = formatBalanceWithoutSuffix(amount, BitcoinUnit.BTC, false);
       amount = params.amount;
       navigate('SendSuccess', {
@@ -107,34 +95,18 @@ const SendConfirm = () => {
     }
   };
 
-  const broadcast = async tx => {
-    await BlueElectrum.ping();
-    await BlueElectrum.waitTillConnected();
-
-    if (isBiometricUseCapableAndEnabled) {
-      if (!(await Biometric.unlockWithBiometrics())) {
-        return;
-      }
-    }
-
-    const result = await wallet.broadcastTx(tx);
-    if (!result) {
-      throw new Error(loc.errors.broadcast);
-    }
-
-    return result;
-  };
 
   const _renderItem = ({ index, item }) => {
+    console.log('item', item)
     return (
       <>
         <View style={styles.valueWrap}>
           <Text testID="TransactionValue" style={[styles.valueValue, stylesHook.valueValue]}>
-            {currency.satoshiToBTC(item.value)}
+            { item.amount }
           </Text>
           <Text style={[styles.valueUnit, stylesHook.valueUnit]}>{' ' + loc.units[BitcoinUnit.BTC]}</Text>
         </View>
-        <Text style={[styles.transactionAmountFiat, stylesHook.transactionAmountFiat]}>{currency.satoshiToLocalCurrency(item.value)}</Text>
+        <Text style={[styles.transactionAmountFiat, stylesHook.transactionAmountFiat]}>{formatAmountFiat(item.amount)}</Text>
         <BlueCard>
           <Text style={[styles.transactionDetailsTitle, stylesHook.transactionDetailsTitle]}>{loc.send.create_to}</Text>
           <Text testID="TransactionAddress" style={[styles.transactionDetailsSubtitle, stylesHook.transactionDetailsSubtitle]}>
@@ -171,7 +143,7 @@ const SendConfirm = () => {
       <View style={styles.cardBottom}>
         <BlueCard>
           <Text style={styles.cardText} testID="TransactionFee">
-            {loc.send.create_fee}: {formatBalance(feeSatoshi, BitcoinUnit.BTC)} ({currency.satoshiToLocalCurrency(feeSatoshi)})
+            {loc.send.create_fee}: { formatBalance(fee) }
           </Text>
           {isLoading ? <ActivityIndicator /> : <BlueButton onPress={send} title={loc.send.confirm_sendNow} />}
           <TouchableOpacity
@@ -185,14 +157,12 @@ const SendConfirm = () => {
                 }
               }
 
-              navigate('CreateTransaction', {
+              navigate('SendDetails', {
                 fee,
                 recipients,
                 memo,
                 tx,
-                satoshiPerByte,
-                wallet,
-                feeSatoshi,
+                wallet
               });
             }}
           >
